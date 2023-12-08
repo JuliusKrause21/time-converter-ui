@@ -1,31 +1,7 @@
-import { ReactElement, useState } from 'react';
-import Card from '@mui/material/Card';
-import { Box, Button, CardContent, styled, TextField } from '@mui/material';
-import { convertGnssToUnix, GnssTime, isValidGnssTime, MAX_TIME_OF_WEEK } from '../../utils/convertGnssToUnix.ts';
-
-const CardContainerStyled = styled(Box)({
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  height: '100vh'
-});
-
-const CardStyled = styled(Card)({
-  minWidth: 500
-});
-
-const FormWrapperStyled = styled(Box)({
-  display: 'flex',
-  flexDirection: 'column',
-  rowGap: 25
-});
-
-const ButtonWrapperStyled = styled(Box)({
-  display: 'flex',
-  flexDirection: 'column',
-  rowGap: 10,
-  marginTop: 35
-});
+import { FC, ReactElement, useState } from 'react';
+import { Button, TextField } from '@mui/material';
+import { GnssTime, isValidGnssTime, MAX_TIME_OF_WEEK } from '../../utils/convertGnssToUnix.ts';
+import { ButtonWrapperStyled, CardStyled, FormWrapperStyled } from '../CardContainer.style.ts';
 
 interface FieldState<T> {
   value: T;
@@ -39,9 +15,14 @@ enum GnssValidationError {
   TimeOfWeekRange = 'Time of week must be between 0 and 604800'
 }
 
-const initialFieldState = { value: '', error: false };
+const initialFieldState: FieldState<string> = { value: '', error: false };
 
-const GnssCard = (): ReactElement => {
+interface GnssCardProps {
+  onSubmit: (value: GnssTime) => void;
+  onClear: () => void;
+}
+
+const GnssCard: FC<GnssCardProps> = ({ onSubmit, onClear }): ReactElement => {
   const [week, setWeek] = useState<FieldState<string>>(initialFieldState);
   const [timeOfWeek, setTimeOfWeek] = useState<FieldState<string>>(initialFieldState);
 
@@ -55,17 +36,14 @@ const GnssCard = (): ReactElement => {
       console.log('Validation failed');
       return;
     }
-    try {
-      const unix = convertGnssToUnix(gnssTime);
-      console.log('Unix:', unix);
-    } catch (error) {
-      console.log(error);
-    }
+
+    onSubmit(gnssTime);
   };
 
   const handleClear = () => {
     setWeek(initialFieldState);
     setTimeOfWeek(initialFieldState);
+    onClear();
   };
 
   function isValidWeek(week: string): boolean {
@@ -102,46 +80,40 @@ const GnssCard = (): ReactElement => {
   }
 
   return (
-    <CardContainerStyled>
-      <CardStyled>
-        <CardContent>
-          <FormWrapperStyled>
-            <TextField
-              type="number"
-              label="Week"
-              variant="outlined"
-              required
-              value={week.value}
-              error={week.error}
-              helperText={week.error && week.message}
-              onChange={event => setWeek(prevState => ({ ...prevState, value: event.target.value, error: false }))}
-              onBlur={event => isValidWeek(event.target.value)}
-            />
-            <TextField
-              type="number"
-              label="Time of week"
-              variant="outlined"
-              required
-              value={timeOfWeek.value}
-              error={timeOfWeek.error}
-              helperText={timeOfWeek.error && timeOfWeek.message}
-              onChange={event =>
-                setTimeOfWeek(prevState => ({ ...prevState, value: event.target.value, error: false }))
-              }
-              onBlur={event => isValidTimeOfWeek(event.target.value)}
-            />
-          </FormWrapperStyled>
-          <ButtonWrapperStyled>
-            <Button onClick={handleSubmit} variant="contained">
-              Submit
-            </Button>
-            <Button onClick={handleClear} variant="outlined">
-              Clear
-            </Button>
-          </ButtonWrapperStyled>
-        </CardContent>
-      </CardStyled>
-    </CardContainerStyled>
+    <CardStyled>
+      <FormWrapperStyled>
+        <TextField
+          type="number"
+          label="Week"
+          variant="outlined"
+          required
+          value={week.value}
+          error={week.error}
+          helperText={week.error && week.message}
+          onChange={event => setWeek(prevState => ({ ...prevState, value: event.target.value, error: false }))}
+          onBlur={event => isValidWeek(event.target.value)}
+        />
+        <TextField
+          type="number"
+          label="Time of week"
+          variant="outlined"
+          required
+          value={timeOfWeek.value}
+          error={timeOfWeek.error}
+          helperText={timeOfWeek.error && timeOfWeek.message}
+          onChange={event => setTimeOfWeek(prevState => ({ ...prevState, value: event.target.value, error: false }))}
+          onBlur={event => isValidTimeOfWeek(event.target.value)}
+        />
+      </FormWrapperStyled>
+      <ButtonWrapperStyled>
+        <Button onClick={handleSubmit} variant="contained">
+          Submit
+        </Button>
+        <Button onClick={handleClear} variant="outlined">
+          Clear
+        </Button>
+      </ButtonWrapperStyled>
+    </CardStyled>
   );
 };
 
