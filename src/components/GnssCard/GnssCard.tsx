@@ -2,20 +2,13 @@ import { FC, ReactElement, useState } from 'react';
 import { Button, TextField } from '@mui/material';
 import { GnssTime, isValidGnssTime, MAX_TIME_OF_WEEK } from '../../utils/convertGnssToUnix.ts';
 import { ButtonWrapperStyled, CardStyled, FormWrapperStyled } from '../CardContainer.style.ts';
-
-interface FieldState<T> {
-  value: T;
-  error: boolean;
-  message?: string;
-}
+import { FieldState, initialFieldState } from '../../models/FieldState.ts';
 
 enum GnssValidationError {
   Required = 'Value is required',
   NotNegative = 'Week must not be less than 0',
   TimeOfWeekRange = 'Time of week must be between 0 and 604800'
 }
-
-const initialFieldState: FieldState<string> = { value: '', error: false };
 
 interface GnssCardProps {
   onSubmit: (value: GnssTime) => void;
