@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { convertGnssToUnix } from './convertGnssToUnix.ts';
+import { convertGnssToUnix, MAX_TIME_OF_WEEK } from './convertGnssToUnix.ts';
 
 describe('Convert GNSS time to Unix time', () => {
   describe('Throws an error for negative values', () => {
@@ -20,6 +20,12 @@ describe('Convert GNSS time to Unix time', () => {
 
     test('to throw an error for timeOfWeek smaller than 0', () => {
       const initialGnssTime = { week: 0, timeOfWeek: -1 };
+
+      expect(() => convertGnssToUnix(initialGnssTime)).toThrowError();
+    });
+
+    test('to throw an error for timeOfWeek greater than maximum number', () => {
+      const initialGnssTime = { week: 0, timeOfWeek: MAX_TIME_OF_WEEK + 1 };
 
       expect(() => convertGnssToUnix(initialGnssTime)).toThrowError();
     });

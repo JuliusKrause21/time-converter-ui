@@ -112,7 +112,7 @@ export function convertGnssToUnix(gnssTime: GnssTime): number {
   console.log('Week:', gnssTime.week);
   console.log('Time of week:', gnssTime.timeOfWeek);
 
-  if (gnssTime.week < 0 || gnssTime.timeOfWeek < 0) {
+  if (gnssTime.week < 0 || gnssTime.timeOfWeek < 0 || gnssTime.timeOfWeek > MAX_TIME_OF_WEEK) {
     throw new Error('Week and time of week need to be positive numbers including 0');
   }
 
@@ -141,9 +141,9 @@ export function isValidGnssTime(time: unknown): time is GnssTime {
     return false;
   }
   const probablyGnssTime = time as GnssTime;
-  if (probablyGnssTime.week === undefined || probablyGnssTime.week < 0) {
-    return false;
-  }
-
-  return !(probablyGnssTime.timeOfWeek === undefined || probablyGnssTime.timeOfWeek < 0);
+  return !(
+    probablyGnssTime.timeOfWeek === undefined ||
+    probablyGnssTime.timeOfWeek < 0 ||
+    probablyGnssTime.timeOfWeek > MAX_TIME_OF_WEEK
+  );
 }
