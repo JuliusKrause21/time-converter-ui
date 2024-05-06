@@ -3,14 +3,15 @@ export interface GnssTime {
   timeOfWeek: number;
 }
 
-const UNIX_AT_GPS_ZERO = 315964800;
-export const MAX_TIME_OF_WEEK = 604800;
+export const unixAtGpsZero = 315964800;
+export const maxTimeOfWeek = 604800;
 
-const addedLeapSeconds = [
+// Can be database entries to be updated via the backend in case new leap seconds will be added
+export const addedLeapSeconds = [
   {
-    unixTime: 315532800,
+    unixTime: 315534800,
     leapSeconds: 0,
-    utc: '1980-01-01T00:00:00.000Z'
+    utc: '1980-01-06T00:00:00.000Z'
   },
   {
     unixTime: 362793600,
@@ -104,7 +105,7 @@ const addedLeapSeconds = [
   }
 ];
 
-function weekToSeconds(week: number): number {
+export function weekToSeconds(week: number): number {
   return week * 7 * 24 * 3600;
 }
 
@@ -112,13 +113,13 @@ export function convertGnssToUnix(gnssTime: GnssTime): number {
   console.log('Week:', gnssTime.week);
   console.log('Time of week:', gnssTime.timeOfWeek);
 
-  if (gnssTime.week < 0 || gnssTime.timeOfWeek < 0 || gnssTime.timeOfWeek > MAX_TIME_OF_WEEK) {
+  if (gnssTime.week < 0 || gnssTime.timeOfWeek < 0 || gnssTime.timeOfWeek > maxTimeOfWeek) {
     throw new Error('Week and time of week need to be positive numbers including 0');
   }
 
   const totalSeconds = weekToSeconds(gnssTime.week) + gnssTime.timeOfWeek;
   console.log('Total seconds:', totalSeconds);
-  const unixTimeWithLeapSeconds = UNIX_AT_GPS_ZERO + totalSeconds;
+  const unixTimeWithLeapSeconds = unixAtGpsZero + totalSeconds;
 
   const leapSeconds = addedLeapSeconds
     .filter(addedLeapSecond => addedLeapSecond.unixTime + addedLeapSecond.leapSeconds <= unixTimeWithLeapSeconds)
@@ -144,6 +145,6 @@ export function isValidGnssTime(time: unknown): time is GnssTime {
   return !(
     probablyGnssTime.timeOfWeek === undefined ||
     probablyGnssTime.timeOfWeek < 0 ||
-    probablyGnssTime.timeOfWeek > MAX_TIME_OF_WEEK
+    probablyGnssTime.timeOfWeek > maxTimeOfWeek
   );
 }

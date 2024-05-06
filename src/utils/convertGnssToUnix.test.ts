@@ -1,11 +1,11 @@
 import { describe, expect, test } from 'vitest';
-import { convertGnssToUnix, MAX_TIME_OF_WEEK } from './convertGnssToUnix.ts';
+import { convertGnssToUnix, maxTimeOfWeek, unixAtGpsZero } from './convertGnssToUnix.ts';
 
-describe('Convert GNSS time to Unix time', () => {
-  describe('Throws an error for negative values', () => {
+describe('convertGnssToUnix', () => {
+  describe('Throws an error for incorrect values', () => {
     test('to convert initial GNSS time correctly', () => {
       const initialGnssTime = { week: 0, timeOfWeek: 0 };
-      const expectedUnixTime = 315964800;
+      const expectedUnixTime = unixAtGpsZero;
 
       const unixTime = convertGnssToUnix(initialGnssTime);
 
@@ -25,7 +25,7 @@ describe('Convert GNSS time to Unix time', () => {
     });
 
     test('to throw an error for timeOfWeek greater than maximum number', () => {
-      const initialGnssTime = { week: 0, timeOfWeek: MAX_TIME_OF_WEEK + 1 };
+      const initialGnssTime = { week: 0, timeOfWeek: maxTimeOfWeek + 1 };
 
       expect(() => convertGnssToUnix(initialGnssTime)).toThrowError();
     });
@@ -128,12 +128,17 @@ describe('Convert GNSS time to Unix time', () => {
     test.each(timeStampsAtLeapSecondsChange)('that leap seconds are applied at $utc', ({ gnssTime, unixTime }) => {
       const convertedUnixTimeAtChange = convertGnssToUnix(gnssTime);
       expect(convertedUnixTimeAtChange).toBe(unixTime);
-
-      const convertedUnixTimeBeforeChange = convertGnssToUnix({
-        ...gnssTime,
-        timeOfWeek: gnssTime.timeOfWeek - 1
-      });
-      expect(convertedUnixTimeBeforeChange).toBe(unixTime);
     });
+
+    test.each(timeStampsAtLeapSecondsChange)(
+      'that leap seconds were not applied before $utc',
+      ({ gnssTime, unixTime }) => {
+        const convertedUnixTimeBeforeChange = convertGnssToUnix({
+          ...gnssTime,
+          timeOfWeek: gnssTime.timeOfWeek - 1
+        });
+        expect(convertedUnixTimeBeforeChange).toBe(unixTime);
+      }
+    );
   });
 });

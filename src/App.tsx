@@ -4,6 +4,7 @@ import UnixCard from './components/UnixCard/UnixCard.tsx';
 import { convertGnssToUnix, GnssTime } from './utils/convertGnssToUnix.ts';
 import { useState } from 'react';
 import { FieldState, initialFieldState } from './models/FieldState.ts';
+import { convertUnixToGnss } from './utils/convertUnixToGnss.ts';
 
 function App() {
   const [week, setWeek] = useState<FieldState<string>>(initialFieldState);
@@ -30,6 +31,9 @@ function App() {
 
   const handleConvertUnixTime = (unixTime: number): void => {
     console.log('Unix time:', unixTime);
+    const gnssTime = convertUnixToGnss(unixTime);
+    setWeek({ value: `${gnssTime.week}`, error: false });
+    setTimeOfWeek({ value: `${gnssTime.timeOfWeek}`, error: false });
   };
 
   return (

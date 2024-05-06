@@ -1,6 +1,6 @@
 import { FC, ReactElement } from 'react';
 import { Button, TextField } from '@mui/material';
-import { GnssTime, isValidGnssTime, MAX_TIME_OF_WEEK } from '../../utils/convertGnssToUnix.ts';
+import { GnssTime, isValidGnssTime, maxTimeOfWeek } from '../../utils/convertGnssToUnix.ts';
 import { ButtonWrapperStyled, CardStyled, FormWrapperStyled } from '../CardContainer.style.ts';
 import { FieldState, initialFieldState } from '../../models/FieldState.ts';
 
@@ -60,7 +60,7 @@ const GnssCard: FC<GnssCardProps> = ({ week, timeOfWeek, setWeek, setTimeOfWeek,
       return false;
     }
 
-    if (mappedTimeOfWeek < 0 || mappedTimeOfWeek > MAX_TIME_OF_WEEK) {
+    if (mappedTimeOfWeek < 0 || mappedTimeOfWeek > maxTimeOfWeek) {
       setTimeOfWeek(prevState => ({ ...prevState, error: true, message: GnssValidationError.TimeOfWeekRange }));
       return false;
     }
