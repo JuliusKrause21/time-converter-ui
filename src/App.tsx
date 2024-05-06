@@ -1,15 +1,17 @@
 import GnssCard from './components/GnssCard/GnssCard.tsx';
 import { CardContainerStyled } from './components/CardContainer.style.ts';
 import UnixCard from './components/UnixCard/UnixCard.tsx';
-import { convertGnssToUnix, GnssTime } from './utils/convertGnssToUnix.ts';
+import { GnssTime } from './utils/convertGnssToUnix.ts';
 import { useState } from 'react';
 import { FieldState, initialFieldState } from './models/FieldState.ts';
-import { convertUnixToGnss } from './utils/convertUnixToGnss.ts';
+import { TimeConverter } from './utils/TimeConverter.ts';
 
 function App() {
   const [week, setWeek] = useState<FieldState<string>>(initialFieldState);
   const [timeOfWeek, setTimeOfWeek] = useState<FieldState<string>>(initialFieldState);
   const [unixTime, setUnixTime] = useState<FieldState<string>>(initialFieldState);
+
+  const timeConverter = new TimeConverter();
 
   const handleFormClear = () => {
     setUnixTime(initialFieldState);
@@ -21,7 +23,8 @@ function App() {
     console.log('Week:', gnssTime.week);
     console.log('Time of week:', gnssTime.timeOfWeek);
     try {
-      const unix = convertGnssToUnix(gnssTime);
+      // const unix = convertGnssToUnix(gnssTime);
+      const unix = timeConverter.convertGnssToUnixTime(gnssTime);
       setUnixTime({ value: `${unix}`, error: false });
       console.log('Unix:', unix);
     } catch (error) {
@@ -31,7 +34,8 @@ function App() {
 
   const handleConvertUnixTime = (unixTime: number): void => {
     console.log('Unix time:', unixTime);
-    const gnssTime = convertUnixToGnss(unixTime);
+    // const gnssTime = convertUnixToGnss(unixTime);
+    const gnssTime = timeConverter.convertUnixToGnssTime(unixTime);
     setWeek({ value: `${gnssTime.week}`, error: false });
     setTimeOfWeek({ value: `${gnssTime.timeOfWeek}`, error: false });
   };
