@@ -23,8 +23,7 @@ function App() {
     console.log('Week:', gnssTime.week);
     console.log('Time of week:', gnssTime.timeOfWeek);
     try {
-      // const unix = convertGnssToUnix(gnssTime);
-      const unix = timeConverter.convertGnssToUnixTime(gnssTime);
+      const unix = timeConverter.convertGnssTime(gnssTime).unixTime;
       setUnixTime({ value: `${unix}`, error: false });
       console.log('Unix:', unix);
     } catch (error) {
@@ -34,10 +33,9 @@ function App() {
 
   const handleConvertUnixTime = (unixTime: number): void => {
     console.log('Unix time:', unixTime);
-    // const gnssTime = convertUnixToGnss(unixTime);
-    const gnssTime = timeConverter.convertUnixToGnssTime(unixTime);
-    setWeek({ value: `${gnssTime.week}`, error: false });
-    setTimeOfWeek({ value: `${gnssTime.timeOfWeek}`, error: false });
+    const gnssTime = timeConverter.convertUnixTime(unixTime).gnssTime;
+    setWeek({ value: `${gnssTime?.week ?? ''}`, error: false });
+    setTimeOfWeek({ value: `${gnssTime?.timeOfWeek ?? ''}`, error: false });
   };
 
   return (
