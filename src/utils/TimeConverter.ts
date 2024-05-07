@@ -119,10 +119,10 @@ export class TimeConverter {
       throw new Error('Invalid unix timestamp');
     }
     if (unixTime < unixAtGpsZero) {
-      throw new Error('Unix timestamp older than GNSS');
+      throw new Error('Unix timestamp older than gnss initial time');
     }
 
-    const unixTimeWithLeapSeconds = this.useLeapSeconds ? unixTime + this.getLeapSecondsFromUnix(unixTime) : unixTime;
+    const unixTimeWithLeapSeconds = this.useLeapSeconds ? unixTime + this.getLeapSecondsToAdd(unixTime) : unixTime;
 
     const week = Math.floor((unixTimeWithLeapSeconds - unixAtGpsZero) / maxTimeOfWeek);
     const timeOfWeek = unixTimeWithLeapSeconds - unixAtGpsZero - this.weekToSeconds(week);
@@ -131,7 +131,7 @@ export class TimeConverter {
   }
 
   public convertUtcToGnssTime(utc: Date): GnssTime {
-    return this.convertUnixToGnssTime(utc.getUTCSeconds());
+    return this.convertUnixToGnssTime(utc.getTime() / 1000);
   }
 
   public convertGnssToUnixTime(gnssTime: GnssTime): number {
@@ -143,32 +143,46 @@ export class TimeConverter {
     const unixTimeWithLeapSeconds = unixAtGpsZero + totalSeconds;
 
     return this.useLeapSeconds
-      ? unixTimeWithLeapSeconds - this.getLeapSecondsFromUnix(unixTimeWithLeapSeconds)
+      ? unixTimeWithLeapSeconds - this.getLeapSecondsToSubtract(unixTimeWithLeapSeconds)
       : unixTimeWithLeapSeconds;
   }
 
-  public converUtcToUnixTime(utc: Date): number {
-    return utc.getUTCSeconds();
+  public convertUtcToUnixTime(utc: Date): number {
+    const unixTime = utc.getTime() / 1000;
+    if (unixTime < 0) {
+      throw new Error('Utc timestamp older than initial unix time');
+    }
+    return unixTime;
   }
 
   public convertUnixToUtc(unixTime: number): Date {
+    if (unixTime < 0) {
+      throw new Error('Invalid unix timestamp');
+    }
+
     return new Date(unixTime);
   }
 
   public convertGnssToUtc(gnssTime: GnssTime): Date {
-    return new Date(this.convertGnssToUnixTime(gnssTime));
+    return new Date(this.convertGnssToUnixTime(gnssTime) * 1000);
   }
 
-  // Function overloading not possible in javascript??
-  private getLeapSecondsFromUnix(unixTime: number): number {
+  // TODO: this logic can be generalized
+  private getLeapSecondsToSubtract(unixTime: number): number {
     return addedLeapSeconds
       .filter(addedLeapSecond => addedLeapSecond.unixTime + addedLeapSecond.leapSeconds <= unixTime)
       .reverse()[0].leapSeconds;
   }
 
-  private getLeapSecondsFromGnss(gnssTime: GnssTime): number {
+  private getLeapSecondsToAdd(unixTime: number): number {
+    return addedLeapSeconds
+      .filter(addedLeapSecond => addedLeapSecond.unixTime <= unixTime + addedLeapSecond.leapSeconds)
+      .reverse()[0].leapSeconds;
+  }
+
+  public getLeapSecondsFromGnss(gnssTime: GnssTime): number {
     const unixTime = this.convertGnssToUnixTime(gnssTime);
-    return this.getLeapSecondsFromUnix(unixTime);
+    return this.getLeapSecondsToSubtract(unixTime);
   }
 
   private getDayOfYear(): number {}

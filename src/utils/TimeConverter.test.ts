@@ -1,7 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { TimeConverter } from './TimeConverter.ts';
-import { maxTimeOfWeek, unixAtGpsZero } from './convertGnssToUnix.ts';
-import { convertUnixToGnss } from './convertUnixToGnss.ts';
+import { maxTimeOfWeek, TimeConverter, unixAtGpsZero } from './TimeConverter.ts';
 
 describe('TimeConverter', () => {
   const timeConverter = new TimeConverter();
@@ -118,29 +116,20 @@ describe('TimeConverter', () => {
     });
 
     test.each(timeStampsAtLeapSecondsChange)('that leap seconds are applied at $utc', ({ gnssTime, unixTime }) => {
-      const convertedGnssTime = convertUnixToGnss(unixTime);
+      const convertedGnssTime = timeConverter.convertUnixToGnssTime(unixTime);
       expect(convertedGnssTime).toStrictEqual(gnssTime);
     });
 
     test.each(timeStampsAtLeapSecondsChange)(
       'that leap seconds where not applied before $utc',
       ({ gnssTime, unixTime }) => {
-        const convertedGnssTimeBeforeChange = convertUnixToGnss(unixTime - 1);
+        const convertedGnssTimeBeforeChange = timeConverter.convertUnixToGnssTime(unixTime - 1);
         expect(convertedGnssTimeBeforeChange).toStrictEqual({ ...gnssTime, timeOfWeek: gnssTime.timeOfWeek - 1 });
       }
     );
   });
 
   describe('convertGnssToUnixTime', () => {
-    test('to convert initial GNSS time correctly', () => {
-      const initialGnssTime = { week: 0, timeOfWeek: 0 };
-      const expectedUnixTime = unixAtGpsZero;
-
-      const unixTime = timeConverter.convertGnssToUnixTime(initialGnssTime);
-
-      expect(unixTime).toBe(expectedUnixTime);
-    });
-
     test('to throw an error for weeks smaller than 0', () => {
       const initialGnssTime = { week: -1, timeOfWeek: 0 };
 
@@ -159,6 +148,15 @@ describe('TimeConverter', () => {
       expect(() => timeConverter.convertGnssToUnixTime(initialGnssTime)).toThrowError();
     });
 
+    test('to convert initial GNSS time correctly', () => {
+      const initialGnssTime = { week: 0, timeOfWeek: 0 };
+      const expectedUnixTime = unixAtGpsZero;
+
+      const unixTime = timeConverter.convertGnssToUnixTime(initialGnssTime);
+
+      expect(unixTime).toBe(expectedUnixTime);
+    });
+
     test.each(timeStampsAtLeapSecondsChange)('that leap seconds are applied at $utc', ({ gnssTime, unixTime }) => {
       const convertedUnixTimeAtChange = timeConverter.convertGnssToUnixTime(gnssTime);
       expect(convertedUnixTimeAtChange).toBe(unixTime);
@@ -172,6 +170,129 @@ describe('TimeConverter', () => {
           timeOfWeek: gnssTime.timeOfWeek - 1
         });
         expect(convertedUnixTimeBeforeChange).toBe(unixTime);
+      }
+    );
+  });
+
+  describe('convertUtcToGnssTime', () => {
+    test('to throw an error if utc time is older than gnss initial time', () => {
+      const utc = new Date('1980-01-05T00:00:00.000Z');
+      expect(() => timeConverter.convertUtcToGnssTime(utc)).toThrowError();
+    });
+
+    test('to throw an error if utc time is older than unix initial time', () => {
+      const utc = new Date('1960-01-05T00:00:00.000Z');
+      expect(() => timeConverter.convertUtcToGnssTime(utc)).toThrowError();
+    });
+
+    test('to convert correctly to gnss initial time', () => {
+      const utc = new Date('1980-01-06T00:00:00.000Z');
+      const expectedGnssTime = { week: 0, timeOfWeek: 0 };
+
+      const gnssTime = timeConverter.convertUtcToGnssTime(utc);
+
+      expect(gnssTime).toStrictEqual(expectedGnssTime);
+    });
+
+    test.each(timeStampsAtLeapSecondsChange)(
+      'utc is correctly converted to gnss time for all leap seconds',
+      ({ utc, gnssTime }) => {
+        const convertedGnssTime = timeConverter.convertUtcToGnssTime(new Date(utc));
+        expect(convertedGnssTime).toStrictEqual(gnssTime);
+      }
+    );
+  });
+
+  describe('convertUtcToUnixTime', () => {
+    test('to throw an error if utc timestamp is older than initial unix time', () => {
+      const utc = new Date('1960-01-01T00:00:00.000Z');
+      expect(() => timeConverter.convertUtcToUnixTime(utc)).toThrowError();
+    });
+
+    test('to convert utc of initial unix time correctly', () => {
+      const utc = new Date('1970-01-01T00:00:00.000Z');
+      const expectedUnixTime = 0;
+
+      const unixTime = timeConverter.convertUtcToUnixTime(utc);
+
+      expect(unixTime).toEqual(expectedUnixTime);
+    });
+
+    test('to convert utc of initial gnss time correctly', () => {
+      const utc = new Date('1980-01-06T00:00:00.000Z');
+      const expectedUnixTime = unixAtGpsZero;
+
+      const unixTime = timeConverter.convertUtcToUnixTime(utc);
+
+      expect(unixTime).toEqual(expectedUnixTime);
+    });
+
+    test.each(timeStampsAtLeapSecondsChange)(
+      'utc is correctly converted to unix time for all leap seconds',
+      ({ utc, unixTime }) => {
+        const convertedGnssTime = timeConverter.convertUtcToUnixTime(new Date(utc));
+        expect(convertedGnssTime).toStrictEqual(unixTime);
+      }
+    );
+  });
+
+  describe('convertUnixToUtc', () => {
+    test('to throw an error if unix time stamp is smaller than zero', () => {
+      expect(() => timeConverter.convertUnixToUtc(-1)).toThrowError();
+    });
+
+    test('to convert initial unix timestamp correctly to utc', () => {
+      const unixTime = 0;
+      const expectedUtc = new Date('1970-01-01T00:00:00.000Z');
+
+      const utc = timeConverter.convertUnixToUtc(unixTime);
+
+      expect(utc).toStrictEqual(expectedUtc);
+    });
+
+    test('to convert initial gnss timestamp correctly to utc', () => {
+      const unixTime = unixAtGpsZero * 1000;
+      const expectedUtc = new Date('1980-01-06T00:00:00.000Z');
+
+      const utc = timeConverter.convertUnixToUtc(unixTime);
+
+      expect(utc).toStrictEqual(expectedUtc);
+    });
+
+    test.each(timeStampsAtLeapSecondsChange)(
+      'unix time is correctly converted to utc for all leap seconds',
+      ({ utc, unixTime }) => {
+        const convertedGnssTime = timeConverter.convertUnixToUtc(unixTime * 1000);
+        expect(convertedGnssTime).toStrictEqual(new Date(utc));
+      }
+    );
+  });
+
+  describe('convertGnssToUtc', () => {
+    test('to throw an error if week is invalid', () => {
+      const invalidGnssTime = { week: -1, timeOfWeek: 1000 };
+      expect(() => timeConverter.convertGnssToUtc(invalidGnssTime)).toThrowError();
+    });
+
+    test('to throw an error if timeOfWeek is invalid', () => {
+      const invalidGnssTime = { week: 1000, timeOfWeek: -1 };
+      expect(() => timeConverter.convertGnssToUtc(invalidGnssTime)).toThrowError();
+    });
+
+    test('to convert initial gnss time correctly to utc', () => {
+      const gnssTime = { week: 0, timeOfWeek: 0 };
+      const expectedUtc = new Date('1980-01-06T00:00:00.000Z');
+
+      const utc = timeConverter.convertGnssToUtc(gnssTime);
+
+      expect(utc).toStrictEqual(expectedUtc);
+    });
+
+    test.each(timeStampsAtLeapSecondsChange)(
+      'gnss time is correctly converted to utc for all leap seconds',
+      ({ gnssTime, utc }) => {
+        const convertedGnssTime = timeConverter.convertGnssToUtc(gnssTime);
+        expect(convertedGnssTime).toStrictEqual(new Date(utc));
       }
     );
   });
