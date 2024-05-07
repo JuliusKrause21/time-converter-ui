@@ -96,15 +96,103 @@ describe('TimeConverter', () => {
     }
   ];
 
+  describe('convertUnixTime', () => {
+    test('to throw an error if unix timestamp is invalid', () => {
+      const invalidUnixTime = -1;
+      expect(() => timeConverter.convertUnixTime(invalidUnixTime)).toThrowError();
+    });
+
+    test('to convert initial unix timestamp correctly to utc and keep gnss time undefined', () => {
+      const initialUnixTime = 0;
+      const expectedTimeConversionResult = {
+        gnssTime: undefined,
+        utc: new Date('1970-01-01T00:00:00.000Z'),
+        unixTime: initialUnixTime,
+        leapSeconds: 0,
+        leapYear: true,
+        nextLeapYear: undefined
+      };
+
+      const timeConversionResult = timeConverter.convertUnixTime(initialUnixTime);
+
+      expect(timeConversionResult).toStrictEqual(expectedTimeConversionResult);
+    });
+
+    test('to convert initial gnss timestamp correctly', () => {
+      const unixTime = unixAtGpsZero;
+      const expectedTimeConversionResult = {
+        gnssTime: { week: 0, timeOfWeek: 0 },
+        utc: new Date('1980-01-06T00:00:00.000Z'),
+        unixTime,
+        leapSeconds: 0,
+        leapYear: true,
+        nextLeapYear: undefined
+      };
+
+      const timeConversionResult = timeConverter.convertUnixTime(unixTime);
+
+      expect(timeConversionResult).toStrictEqual(expectedTimeConversionResult);
+    });
+  });
+
+  describe('convertGnssTime', () => {
+    test('to throw an error if week is invalid', () => {
+      const invalidGnssTime = { week: -1, timeOfWeek: 1000 };
+      expect(() => timeConverter.convertGnssTime(invalidGnssTime)).toThrowError();
+    });
+
+    test('to throw an error if timeOfWeek is invalid', () => {
+      const invalidGnssTime = { week: 1000, timeOfWeek: -1 };
+      expect(() => timeConverter.convertGnssTime(invalidGnssTime)).toThrowError();
+    });
+
+    test('convert initial gnss timestamp correctly', () => {
+      const initialGnssTime = { week: 0, timeOfWeek: 0 };
+      const expectedTimeConversionResult = {
+        gnssTime: initialGnssTime,
+        utc: new Date('1980-01-06T00:00:00.000Z'),
+        unixTime: unixAtGpsZero,
+        leapSeconds: 0,
+        leapYear: true,
+        nextLeapYear: undefined
+      };
+
+      const timeConversionResult = timeConverter.convertGnssTime(initialGnssTime);
+
+      expect(timeConversionResult).toStrictEqual(expectedTimeConversionResult);
+    });
+  });
+
+  describe('convertUtc', () => {
+    test('to convert utc without throwing an error although timestamp is older than initial unix time', () => {
+      const utc = new Date('1960-01-01T00:00:00.000Z');
+      const expectedTimeConversionResult = {
+        gnssTime: undefined,
+        utc,
+        unixTime: undefined,
+        leapSeconds: 0,
+        leapYear: true,
+        nextLeapYear: undefined
+      };
+
+      const timeConversionResult = timeConverter.convertUtc(utc);
+
+      expect(timeConversionResult).toStrictEqual(expectedTimeConversionResult);
+    });
+  });
+
   describe('convertUnixToGnssTime', () => {
     test('to throw an error if unix timestamp is invalid', () => {
       const invalidUnixTimestamp = -1;
       expect(() => timeConverter.convertUnixToGnssTime(invalidUnixTimestamp)).toThrowError();
     });
 
-    test('to throw an error if unix timestamp is older than GPS', () => {
+    test('to return undefined if unix timestamp is older than GPS', () => {
       const unixTimestampOlderThanGnss = unixAtGpsZero - 1;
-      expect(() => timeConverter.convertUnixToGnssTime(unixTimestampOlderThanGnss)).toThrowError();
+
+      const gnssTime = timeConverter.convertUnixToGnssTime(unixTimestampOlderThanGnss);
+
+      expect(gnssTime).toBe(undefined);
     });
 
     test('convert initial gnss time correctly', () => {
@@ -175,14 +263,16 @@ describe('TimeConverter', () => {
   });
 
   describe('convertUtcToGnssTime', () => {
-    test('to throw an error if utc time is older than gnss initial time', () => {
-      const utc = new Date('1980-01-05T00:00:00.000Z');
-      expect(() => timeConverter.convertUtcToGnssTime(utc)).toThrowError();
+    test('to return undefined if utc time is older than unix initial time', () => {
+      const utc = new Date('1960-01-05T00:00:00.000Z');
+      const gnssTime = timeConverter.convertUtcToGnssTime(utc);
+      expect(gnssTime).toBe(undefined);
     });
 
-    test('to throw an error if utc time is older than unix initial time', () => {
-      const utc = new Date('1960-01-05T00:00:00.000Z');
-      expect(() => timeConverter.convertUtcToGnssTime(utc)).toThrowError();
+    test('to return undefined if utc time is older than gnss initial time', () => {
+      const utc = new Date('1980-01-05T00:00:00.000Z');
+      const gnssTime = timeConverter.convertUtcToGnssTime(utc);
+      expect(gnssTime).toBe(undefined);
     });
 
     test('to convert correctly to gnss initial time', () => {
@@ -204,9 +294,10 @@ describe('TimeConverter', () => {
   });
 
   describe('convertUtcToUnixTime', () => {
-    test('to throw an error if utc timestamp is older than initial unix time', () => {
+    test('to return undefined if utc timestamp is older than initial unix time', () => {
       const utc = new Date('1960-01-01T00:00:00.000Z');
-      expect(() => timeConverter.convertUtcToUnixTime(utc)).toThrowError();
+      const unixTime = timeConverter.convertUtcToGnssTime(utc);
+      expect(unixTime).toBe(undefined);
     });
 
     test('to convert utc of initial unix time correctly', () => {

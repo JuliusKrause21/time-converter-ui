@@ -3,6 +3,15 @@ export interface GnssTime {
   timeOfWeek: number;
 }
 
+export interface TimeConversionResult {
+  utc: Date;
+  leapYear: boolean;
+  gnssTime: GnssTime | undefined;
+  unixTime: number | undefined;
+  leapSeconds: number | undefined;
+  nextLeapYear: number | undefined;
+}
+
 export const unixAtGpsZero = 315964800;
 export const maxTimeOfWeek = 604800;
 export const addedLeapSeconds = [
@@ -103,6 +112,7 @@ export const addedLeapSeconds = [
   }
 ];
 
+// TODO: Test without the use of leap seconds
 export class TimeConverter {
   private useLeapSeconds: boolean;
 
@@ -114,12 +124,63 @@ export class TimeConverter {
     this.useLeapSeconds = useLeapSeconds;
   }
 
-  public convertUnixToGnssTime(unixTime: number): GnssTime {
+  public convertUnixTime(unixTime: number): TimeConversionResult {
+    const utc = this.convertUnixToUtc(unixTime * 1000);
+    const year = utc.getFullYear();
+    const leapYear = this.isLeapYear(year);
+
+    return {
+      utc,
+      unixTime,
+      leapYear,
+      gnssTime: this.convertUnixToGnssTime(unixTime),
+      leapSeconds: this.useLeapSeconds ? this.getLeapSecondsToAdd(unixTime) : undefined,
+      nextLeapYear: leapYear ? undefined : this.nextLeapYear(year)
+    };
+  }
+
+  public convertGnssTime(gnssTime: GnssTime): TimeConversionResult {
+    const utc = this.convertGnssToUtc(gnssTime);
+    const unixTime = this.convertGnssToUnixTime(gnssTime);
+    const year = utc.getFullYear();
+    const leapYear = this.isLeapYear(year);
+
+    return {
+      utc,
+      leapYear,
+      gnssTime,
+      unixTime,
+      leapSeconds: this.useLeapSeconds ? this.getLeapSecondsToSubtract(unixTime) : undefined,
+      nextLeapYear: leapYear ? undefined : this.nextLeapYear(year)
+    };
+  }
+
+  public convertUtc(utc: Date): TimeConversionResult {
+    const unixTime = this.convertUtcToUnixTime(utc);
+    const year = utc.getFullYear();
+    const leapYear = this.isLeapYear(year);
+    const leapSeconds = this.useLeapSeconds
+      ? unixTime !== undefined
+        ? this.getLeapSecondsToSubtract(unixTime)
+        : 0
+      : undefined;
+
+    return {
+      utc,
+      leapYear,
+      unixTime,
+      gnssTime: this.convertUtcToGnssTime(utc),
+      leapSeconds,
+      nextLeapYear: leapYear ? undefined : this.nextLeapYear(year)
+    };
+  }
+
+  public convertUnixToGnssTime(unixTime: number): GnssTime | undefined {
     if (unixTime < 0) {
       throw new Error('Invalid unix timestamp');
     }
     if (unixTime < unixAtGpsZero) {
-      throw new Error('Unix timestamp older than gnss initial time');
+      return undefined;
     }
 
     const unixTimeWithLeapSeconds = this.useLeapSeconds ? unixTime + this.getLeapSecondsToAdd(unixTime) : unixTime;
@@ -130,8 +191,9 @@ export class TimeConverter {
     return { week, timeOfWeek };
   }
 
-  public convertUtcToGnssTime(utc: Date): GnssTime {
-    return this.convertUnixToGnssTime(utc.getTime() / 1000);
+  public convertUtcToGnssTime(utc: Date): GnssTime | undefined {
+    const unixTime = utc.getTime() / 1000;
+    return unixTime < 0 ? undefined : this.convertUnixToGnssTime(unixTime);
   }
 
   public convertGnssToUnixTime(gnssTime: GnssTime): number {
@@ -147,12 +209,9 @@ export class TimeConverter {
       : unixTimeWithLeapSeconds;
   }
 
-  public convertUtcToUnixTime(utc: Date): number {
+  public convertUtcToUnixTime(utc: Date): number | undefined {
     const unixTime = utc.getTime() / 1000;
-    if (unixTime < 0) {
-      throw new Error('Utc timestamp older than initial unix time');
-    }
-    return unixTime;
+    return unixTime < 0 ? undefined : unixTime;
   }
 
   public convertUnixToUtc(unixTime: number): Date {
@@ -175,25 +234,23 @@ export class TimeConverter {
   }
 
   private getLeapSecondsToAdd(unixTime: number): number {
-    return addedLeapSeconds
-      .filter(addedLeapSecond => addedLeapSecond.unixTime <= unixTime + addedLeapSecond.leapSeconds)
-      .reverse()[0].leapSeconds;
+    return (
+      addedLeapSeconds
+        .filter(addedLeapSecond => addedLeapSecond.unixTime <= unixTime + addedLeapSecond.leapSeconds)
+        .reverse()[0]?.leapSeconds ?? 0
+    );
   }
 
-  public getLeapSecondsFromGnss(gnssTime: GnssTime): number {
-    const unixTime = this.convertGnssToUnixTime(gnssTime);
-    return this.getLeapSecondsToSubtract(unixTime);
+  private isLeapYear(year: number): boolean {
+    return (year % 4 == 0 && year % 400 == 0) || year % 100 !== 0;
   }
 
-  private getDayOfYear(): number {}
-
-  private getDayOfWeek(): number {}
-
-  private getSecondOfDay(): number {}
-
-  private isLeapYear(year: number): boolean {}
-
-  private nextLeapYear(year: number): number {}
+  private nextLeapYear(year: number): number {
+    while (!this.isLeapYear(year)) {
+      year++;
+    }
+    return year;
+  }
 
   private weekToSeconds(week: number): number {
     return week * maxTimeOfWeek;
