@@ -39,6 +39,7 @@ const UnixCard: FC<UnixCardProps> = ({ unixTime, setUnixTime, onSubmit, onClear 
 
   return (
     <CardStyled>
+      <h2>UNIX</h2>
       <FormWrapperStyled>
         <TextField
           type="number"
