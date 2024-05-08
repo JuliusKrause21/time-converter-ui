@@ -1,15 +1,22 @@
 import GnssCard from './components/GnssCard/GnssCard.tsx';
-import { CardContainerStyled } from './components/CardContainer.style.ts';
+import {
+  ButtonWrapperStyled,
+  CardContainerStyled,
+  CardStyled,
+  FormWrapperStyled
+} from './components/CardContainer.style.ts';
 import UnixCard from './components/UnixCard/UnixCard.tsx';
 import { GnssTime } from './utils/convertGnssToUnix.ts';
 import { useState } from 'react';
 import { FieldState, initialFieldState } from './models/FieldState.ts';
-import { TimeConverter } from './utils/TimeConverter.ts';
+import { Button, TextField } from '@mui/material';
+import { TimeConverter } from '@jk21/time-converter';
 
 function App() {
   const [week, setWeek] = useState<FieldState<string>>(initialFieldState);
   const [timeOfWeek, setTimeOfWeek] = useState<FieldState<string>>(initialFieldState);
   const [unixTime, setUnixTime] = useState<FieldState<string>>(initialFieldState);
+  const [utc, setUtc] = useState<Date | undefined>(new Date(Date.now()));
 
   const timeConverter = new TimeConverter();
 
@@ -17,6 +24,7 @@ function App() {
     setUnixTime(initialFieldState);
     setWeek(initialFieldState);
     setTimeOfWeek(initialFieldState);
+    setUtc(undefined);
   };
 
   const handleConvertGnssTime = (gnssTime: GnssTime): void => {
@@ -54,6 +62,24 @@ function App() {
         onSubmit={handleConvertUnixTime}
         onClear={handleFormClear}
       />
+      <CardStyled>
+        <FormWrapperStyled>
+          <h2>UTC</h2>
+          <TextField type="number" label="Year" value={utc?.getFullYear() ?? ''} />
+          <TextField type="number" label="Month" value={utc?.getMonth() ?? ''} />
+          <TextField type="number" label="Hours" value={utc?.getUTCHours() ?? ''} />
+          <TextField type="number" label="Minutes" value={utc?.getUTCMinutes() ?? ''} />
+          <TextField type="number" label="Seconds" value={utc?.getUTCSeconds() ?? ''} />
+          <ButtonWrapperStyled>
+            <Button variant="contained" onClick={() => {}}>
+              Submit
+            </Button>
+            <Button variant="outlined" onClick={() => handleFormClear()}>
+              Clear
+            </Button>
+          </ButtonWrapperStyled>
+        </FormWrapperStyled>
+      </CardStyled>
     </CardContainerStyled>
   );
 }
