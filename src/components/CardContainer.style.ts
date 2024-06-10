@@ -6,7 +6,7 @@ export const CardContainerStyled = styled(Box)({
   flexDirection: 'row',
   flexWrap: 'wrap',
   justifyContent: 'center',
-  alignItems: 'center',
+  alignItems: 'flex-start',
   columnGap: 45,
   rowGap: 45
 });
@@ -16,7 +16,7 @@ export const CardStyled = styled(Card)({
   flexDirection: 'column',
   padding: 15,
   minWidth: 350,
-  height: 300
+  height: 'fit-content'
 });
 
 export const FormWrapperStyled = styled(Box)({
