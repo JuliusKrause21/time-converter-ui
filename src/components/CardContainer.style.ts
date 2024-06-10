@@ -1,11 +1,20 @@
 import { Box, styled } from '@mui/material';
 import Card from '@mui/material/Card';
 
+export const CardContainerStyled = styled('div')({
+  display: 'flex',
+  justifyContent: 'center',
+  width: '100%',
+  margin: '0 10px'
+});
+
 export const CardStyled = styled(Card)({
   display: 'flex',
   flexDirection: 'column',
   padding: 15,
-  width: '50%',
+  width: '100%',
+  maxWidth: '750px',
+  minWidth: '250px',
   borderRadius: '8px',
   border: '1px solid white',
   background: 'transparent',

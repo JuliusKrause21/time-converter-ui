@@ -5,6 +5,9 @@ import { TimeConverter } from '@jk21/time-converter';
 import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
 import GnssCard from './components/GnssCard/GnssCard.tsx';
 import { GnssTime } from './utils/convertGnssToUnix.ts';
+import { CardContainerStyled } from './components/CardContainer.style.ts';
+
+export const breakpointValues = { xs: 360, sm: 600, md: 900, lg: 1200, xl: 1920 };
 
 const theme = createTheme({
   palette: {
@@ -16,6 +19,9 @@ const theme = createTheme({
       main: '#ffffff',
       light: '#F5EBFF',
       contrastText: '#000'
+    },
+    error: {
+      main: '#FF4B4BFF'
     }
   },
   components: {
@@ -50,6 +56,9 @@ const theme = createTheme({
         }
       }
     }
+  },
+  breakpoints: {
+    values: breakpointValues
   }
 });
 
@@ -84,7 +93,9 @@ function App() {
             </Button>
           </OverlayStyled>
         ) : (
-          <GnssCard onSubmit={gnssTime => convertGnssTime(gnssTime)} />
+          <CardContainerStyled>
+            <GnssCard onSubmit={gnssTime => convertGnssTime(gnssTime)} />
+          </CardContainerStyled>
         )}
       </PageContainer>
     </ThemeProvider>
