@@ -75,6 +75,7 @@ const GnssCard: FC<GnssCardProps> = ({ week, timeOfWeek, setWeek, setTimeOfWeek,
 
   return (
     <CardStyled>
+      <h2>GNSS</h2>
       <FormWrapperStyled>
         <TextField
           type="number"
