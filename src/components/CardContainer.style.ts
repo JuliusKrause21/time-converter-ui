@@ -15,8 +15,11 @@ export const CardStyled = styled(Card)({
   display: 'flex',
   flexDirection: 'column',
   padding: 15,
-  minWidth: 350,
-  height: 'fit-content'
+  width: '50%',
+  borderRadius: '8px',
+  border: '1px solid white',
+  background: 'transparent',
+  color: 'white'
 });
 
 export const FormWrapperStyled = styled(Box)({
