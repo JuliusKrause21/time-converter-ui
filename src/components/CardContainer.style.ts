@@ -1,16 +1,6 @@
 import { Box, styled } from '@mui/material';
 import Card from '@mui/material/Card';
 
-export const CardContainerStyled = styled(Box)({
-  display: 'flex',
-  flexDirection: 'row',
-  flexWrap: 'wrap',
-  justifyContent: 'center',
-  alignItems: 'flex-start',
-  columnGap: 45,
-  rowGap: 45
-});
-
 export const CardStyled = styled(Card)({
   display: 'flex',
   flexDirection: 'column',

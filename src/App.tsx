@@ -1,9 +1,10 @@
-import { Button, createTheme, styled, TextField, ThemeProvider } from '@mui/material';
+import { Button, createTheme, styled, ThemeProvider } from '@mui/material';
 import background from './assets/watch_background.jpg';
-import { CardStyled, FormWrapperStyled } from './components/CardContainer.style.ts';
 import { useState } from 'react';
 import { TimeConverter } from '@jk21/time-converter';
 import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
+import GnssCard from './components/GnssCard/GnssCard.tsx';
+import { GnssTime } from './utils/convertGnssToUnix.ts';
 
 const theme = createTheme({
   palette: {
@@ -53,14 +54,13 @@ const theme = createTheme({
 });
 
 function App() {
-  const [week, setWeek] = useState('');
   const [conversionResult, setConversionResult] = useState<TimeConversionResult>();
   const [showOverlay, setShowOverlay] = useState(false);
 
   const timeConverter = new TimeConverter();
 
-  const convertGnssTime = () => {
-    const result = timeConverter.convertGnssTime({ week: 0, timeOfWeek: 0 });
+  const convertGnssTime = (gnssTime: GnssTime) => {
+    const result = timeConverter.convertGnssTime(gnssTime);
     setConversionResult(result);
     setShowOverlay(true);
   };
@@ -84,30 +84,7 @@ function App() {
             </Button>
           </OverlayStyled>
         ) : (
-          <CardStyled>
-            <h1>GNSS Time</h1>
-            <FormWrapperStyled>
-              <TextField
-                id="outlined-basic"
-                type="number"
-                label="Week"
-                variant="outlined"
-                value={week}
-                onChange={e => setWeek(e.target.value)}
-              />
-              <TextField
-                id="outlined-basic"
-                type="number"
-                label="Week"
-                variant="outlined"
-                value={week}
-                onChange={e => setWeek(e.target.value)}
-              />
-              <Button variant="contained" onClick={convertGnssTime}>
-                Convert
-              </Button>
-            </FormWrapperStyled>
-          </CardStyled>
+          <GnssCard onSubmit={gnssTime => convertGnssTime(gnssTime)} />
         )}
       </PageContainer>
     </ThemeProvider>

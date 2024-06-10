@@ -1,4 +1,4 @@
-import { FC, ReactElement } from 'react';
+import { FC, ReactElement, useState } from 'react';
 import { Button, TextField } from '@mui/material';
 import { GnssTime, isValidGnssTime, maxTimeOfWeek } from '../../utils/convertGnssToUnix.ts';
 import { ButtonWrapperStyled, CardStyled, FormWrapperStyled } from '../CardContainer.style.ts';
@@ -11,15 +11,13 @@ enum GnssValidationError {
 }
 
 interface GnssCardProps {
-  week: FieldState<string>;
-  timeOfWeek: FieldState<string>;
-  setWeek: (value: ((prevState: FieldState<string>) => FieldState<string>) | FieldState<string>) => void;
-  setTimeOfWeek: (value: ((prevState: FieldState<string>) => FieldState<string>) | FieldState<string>) => void;
   onSubmit: (value: GnssTime) => void;
-  onClear: () => void;
 }
 
-const GnssCard: FC<GnssCardProps> = ({ week, timeOfWeek, setWeek, setTimeOfWeek, onSubmit, onClear }): ReactElement => {
+const GnssCard: FC<GnssCardProps> = ({ onSubmit }): ReactElement => {
+  const [week, setWeek] = useState<FieldState<string>>(initialFieldState);
+  const [timeOfWeek, setTimeOfWeek] = useState<FieldState<string>>(initialFieldState);
+
   const handleSubmit = () => {
     if (!isValidForm(week.value, timeOfWeek.value)) {
       return;
@@ -37,7 +35,6 @@ const GnssCard: FC<GnssCardProps> = ({ week, timeOfWeek, setWeek, setTimeOfWeek,
   const handleClear = () => {
     setWeek(initialFieldState);
     setTimeOfWeek(initialFieldState);
-    onClear();
   };
 
   function isValidWeek(week: string): boolean {
@@ -75,7 +72,7 @@ const GnssCard: FC<GnssCardProps> = ({ week, timeOfWeek, setWeek, setTimeOfWeek,
 
   return (
     <CardStyled>
-      <h2>GNSS</h2>
+      <h1>GNSS Time</h1>
       <FormWrapperStyled>
         <TextField
           type="number"
