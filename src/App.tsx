@@ -1,87 +1,129 @@
-import GnssCard from './components/GnssCard/GnssCard.tsx';
-import {
-  ButtonWrapperStyled,
-  CardContainerStyled,
-  CardStyled,
-  FormWrapperStyled
-} from './components/CardContainer.style.ts';
-import UnixCard from './components/UnixCard/UnixCard.tsx';
-import { GnssTime } from './utils/convertGnssToUnix.ts';
+import { Button, createTheme, styled, ThemeProvider } from '@mui/material';
+import background from './assets/watch_background.jpg';
 import { useState } from 'react';
-import { FieldState, initialFieldState } from './models/FieldState.ts';
-import { Button, TextField } from '@mui/material';
 import { TimeConverter } from '@jk21/time-converter';
+import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
+import GnssCard from './components/GnssCard/GnssCard.tsx';
+import { GnssTime } from './utils/convertGnssToUnix.ts';
+import { CardContainerStyled } from './components/CardContainer.style.ts';
+
+export const breakpointValues = { xs: 360, sm: 600, md: 900, lg: 1200, xl: 1920 };
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#ffffff',
+      contrastText: '#000000'
+    },
+    secondary: {
+      main: '#ffffff',
+      light: '#F5EBFF',
+      contrastText: '#000'
+    },
+    error: {
+      main: '#FF4B4BFF'
+    }
+  },
+  components: {
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          color: 'white',
+          '&.Mui-focused': {
+            color: 'white' // Change 'blue' to your desired focus color
+          }
+        }
+      }
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          '& .MuiInputBase-input': {
+            color: 'white' // Change to your desired text color
+          },
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              border: ' 1px solid white',
+              color: 'white'
+            },
+            '&:hover fieldset': {
+              border: ' 1px solid white'
+            },
+            '&.Mui-focused fieldset': {
+              border: ' 1px solid white'
+            }
+          }
+        }
+      }
+    }
+  },
+  breakpoints: {
+    values: breakpointValues
+  }
+});
 
 function App() {
-  const [week, setWeek] = useState<FieldState<string>>(initialFieldState);
-  const [timeOfWeek, setTimeOfWeek] = useState<FieldState<string>>(initialFieldState);
-  const [unixTime, setUnixTime] = useState<FieldState<string>>(initialFieldState);
-  const [utc, setUtc] = useState<Date | undefined>(new Date(Date.now()));
+  const [conversionResult, setConversionResult] = useState<TimeConversionResult>();
+  const [showOverlay, setShowOverlay] = useState(false);
 
   const timeConverter = new TimeConverter();
 
-  const handleFormClear = () => {
-    setUnixTime(initialFieldState);
-    setWeek(initialFieldState);
-    setTimeOfWeek(initialFieldState);
-    setUtc(undefined);
-  };
-
-  const handleConvertGnssTime = (gnssTime: GnssTime): void => {
-    console.log('Week:', gnssTime.week);
-    console.log('Time of week:', gnssTime.timeOfWeek);
-    try {
-      const unix = timeConverter.convertGnssTime(gnssTime).unixTime;
-      setUnixTime({ value: `${unix}`, error: false });
-      console.log('Unix:', unix);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleConvertUnixTime = (unixTime: number): void => {
-    console.log('Unix time:', unixTime);
-    const gnssTime = timeConverter.convertUnixTime(unixTime).gnssTime;
-    setWeek({ value: `${gnssTime?.week ?? ''}`, error: false });
-    setTimeOfWeek({ value: `${gnssTime?.timeOfWeek ?? ''}`, error: false });
+  const convertGnssTime = (gnssTime: GnssTime) => {
+    const result = timeConverter.convertGnssTime(gnssTime);
+    setConversionResult(result);
+    setShowOverlay(true);
   };
 
   return (
-    <CardContainerStyled>
-      <GnssCard
-        week={week}
-        timeOfWeek={timeOfWeek}
-        setWeek={setWeek}
-        setTimeOfWeek={setTimeOfWeek}
-        onSubmit={handleConvertGnssTime}
-        onClear={handleFormClear}
-      />
-      <UnixCard
-        unixTime={unixTime}
-        setUnixTime={setUnixTime}
-        onSubmit={handleConvertUnixTime}
-        onClear={handleFormClear}
-      />
-      <CardStyled>
-        <FormWrapperStyled>
-          <h2>UTC</h2>
-          <TextField type="number" label="Year" value={utc?.getFullYear() ?? ''} />
-          <TextField type="number" label="Month" value={utc?.getMonth() ?? ''} />
-          <TextField type="number" label="Hours" value={utc?.getUTCHours() ?? ''} />
-          <TextField type="number" label="Minutes" value={utc?.getUTCMinutes() ?? ''} />
-          <TextField type="number" label="Seconds" value={utc?.getUTCSeconds() ?? ''} />
-          <ButtonWrapperStyled>
-            <Button variant="contained" onClick={() => {}}>
-              Submit
+    <ThemeProvider theme={theme}>
+      <PageContainer>
+        {showOverlay ? (
+          <OverlayStyled>
+            <ul>
+              <li>Week: {conversionResult?.gnssTime?.week}</li>
+              <li>Time of week: {conversionResult?.gnssTime?.timeOfWeek}</li>
+              <li>Year: {conversionResult?.utc.getFullYear()}</li>
+              <li>Month: {conversionResult?.utc.getMonth()}</li>
+              <li>Day: {conversionResult?.utc.getDate()}</li>
+              <li>Unix: {conversionResult?.unixTime}</li>
+            </ul>
+
+            <Button variant="contained" onClick={() => setShowOverlay(false)}>
+              Go back
             </Button>
-            <Button variant="outlined" onClick={() => handleFormClear()}>
-              Clear
-            </Button>
-          </ButtonWrapperStyled>
-        </FormWrapperStyled>
-      </CardStyled>
-    </CardContainerStyled>
+          </OverlayStyled>
+        ) : (
+          <CardContainerStyled>
+            <GnssCard onSubmit={gnssTime => convertGnssTime(gnssTime)} />
+          </CardContainerStyled>
+        )}
+      </PageContainer>
+    </ThemeProvider>
   );
 }
+
+const OverlayStyled = styled('div')(() => ({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: '100vw',
+  height: '100vh',
+  backdropFilter: 'blur(20px)',
+  WebkitBackdropFilter: 'blur(20px)'
+}));
+
+const PageContainer = styled('div')(() => ({
+  margin: 0,
+  padding: 0,
+  display: 'inline-flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  minHeight: '100vh',
+  minWidth: '100vw',
+  backgroundImage: `url(${background})`,
+  backgroundRepeat: 'no-repeat',
+  backgroundPosition: 'center',
+  color: 'white'
+}));
 
 export default App;
