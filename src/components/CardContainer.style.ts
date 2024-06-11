@@ -1,22 +1,24 @@
 import { Box, styled } from '@mui/material';
 import Card from '@mui/material/Card';
 
-export const CardContainerStyled = styled(Box)({
+export const CardContainerStyled = styled('div')({
   display: 'flex',
-  flexDirection: 'row',
-  flexWrap: 'wrap',
   justifyContent: 'center',
-  alignItems: 'flex-start',
-  columnGap: 45,
-  rowGap: 45
+  width: '100%',
+  margin: '0 10px'
 });
 
 export const CardStyled = styled(Card)({
   display: 'flex',
   flexDirection: 'column',
   padding: 15,
-  minWidth: 350,
-  height: 'fit-content'
+  width: '100%',
+  maxWidth: '750px',
+  minWidth: '250px',
+  borderRadius: '8px',
+  border: '1px solid white',
+  background: 'transparent',
+  color: 'white'
 });
 
 export const FormWrapperStyled = styled(Box)({
