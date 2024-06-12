@@ -3,6 +3,7 @@ import { OverlayStyled } from './Overlay.style.ts';
 import { FC } from 'react';
 import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
 import ConversionResult from './ConversionResult.tsx';
+import { buildDateString, buildTimeString } from '../../utils/buildUtcStings.ts';
 
 const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const months = [
@@ -25,14 +26,6 @@ interface OverlayProps {
 }
 
 const Overlay: FC<OverlayProps> = ({ conversionResult }) => {
-  function buildDateString(utc: Date | undefined): string {
-    return utc === undefined ? '' : `${utc.getUTCDate()}.${(utc.getUTCMonth() ?? 0) + 1}.${utc.getUTCFullYear()}`;
-  }
-
-  function buildTimeString(utc: Date | undefined): string {
-    return utc === undefined ? '' : `${utc.getUTCHours()}:${utc.getUTCMinutes()}:${utc.getUTCSeconds()}`;
-  }
-
   return (
     <OverlayStyled>
       <CardContainerStyled>
