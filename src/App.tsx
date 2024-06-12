@@ -1,20 +1,12 @@
-import {
-  createTheme,
-  styled,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableRow,
-  ThemeProvider
-} from '@mui/material';
+import { createTheme, styled, ThemeProvider } from '@mui/material';
 import background from './assets/watch_background.jpg';
 import { useState } from 'react';
 import { TimeConverter } from '@jk21/time-converter';
 import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
 import GnssCard from './components/GnssCard/GnssCard.tsx';
-import { GnssTime } from './utils/convertGnssToUnix.ts';
-import { CardContainerStyled, CardStyled } from './components/CardContainer.style.ts';
+import { CardContainerStyled } from './components/CardContainer.style.ts';
+import Overlay from './components/Overlay/Overlay.tsx';
+import { GnssTime } from './models/GnssTime.ts';
 
 export const breakpointValues = { xs: 360, sm: 600, md: 900, lg: 1200, xl: 1920 };
 
@@ -87,22 +79,6 @@ const theme = createTheme({
   }
 });
 
-const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-const months = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'Mai',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December'
-];
-
 function App() {
   const [conversionResult, setConversionResult] = useState<TimeConversionResult>();
   const [showOverlay, setShowOverlay] = useState(false);
@@ -118,77 +94,8 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <PageContainer>
-        {showOverlay ? (
-          <OverlayStyled>
-            <CardContainerStyled>
-              <CardStyled>
-                <TableContainer>
-                  <Table>
-                    <TableBody>
-                      <TableRow>
-                        <TableCell>Week:</TableCell>
-                        <TableCell>{conversionResult?.gnssTime?.week}</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell>Time of week:</TableCell>
-                        <TableCell>{conversionResult?.gnssTime?.timeOfWeek}</TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </CardStyled>
-              <CardStyled>
-                <TableContainer>
-                  <Table>
-                    <TableBody>
-                      <TableRow>
-                        <TableCell>Date:</TableCell>
-                        <TableCell>{`${conversionResult?.utc.getUTCDate()}.${
-                          (conversionResult?.utc.getUTCMonth() ?? 0) + 1
-                        }.${conversionResult?.utc.getUTCFullYear()}`}</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell>Time:</TableCell>
-                        <TableCell>{`${conversionResult?.utc.getUTCHours()}:${conversionResult?.utc.getUTCMinutes()}:${conversionResult?.utc.getUTCSeconds()}`}</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell>Month:</TableCell>
-                        <TableCell>{conversionResult && months[conversionResult?.utc.getMonth()]}</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell>Weekday:</TableCell>
-                        <TableCell>{conversionResult && weekdays[conversionResult?.utc.getDay()]}</TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </CardStyled>
-              <CardStyled>
-                <TableContainer>
-                  <Table>
-                    <TableBody>
-                      <TableRow>
-                        <TableCell>Seconds:</TableCell>
-                        <TableCell>{conversionResult?.unixTime}</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell>Leap year:</TableCell>
-                        <TableCell>{conversionResult?.leapYear}</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell>Next leap year:</TableCell>
-                        <TableCell>{conversionResult?.nextLeapYear}</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell>Leap seconds:</TableCell>
-                        <TableCell>{conversionResult?.leapSeconds}</TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </CardStyled>
-            </CardContainerStyled>
-          </OverlayStyled>
+        {showOverlay && conversionResult ? (
+          <Overlay conversionResult={conversionResult} />
         ) : (
           <CardContainerStyled>
             <GnssCard onSubmit={gnssTime => convertGnssTime(gnssTime)} />
@@ -198,16 +105,6 @@ function App() {
     </ThemeProvider>
   );
 }
-
-const OverlayStyled = styled('div')(() => ({
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  width: '100vw',
-  height: '100vh',
-  backdropFilter: 'blur(20px)',
-  WebkitBackdropFilter: 'blur(20px)'
-}));
 
 const PageContainer = styled('div')(() => ({
   margin: 0,

@@ -1,4 +1,5 @@
-import { addedLeapSeconds, GnssTime, unixAtGpsZero, weekToSeconds } from './convertGnssToUnix.ts';
+import { addedLeapSeconds, unixAtGpsZero, weekToSeconds } from './convertGnssToUnix.ts';
+import { GnssTime } from '../models/GnssTime.ts';
 
 const secondsPerWeek = 7 * 24 * 60 * 60;
 

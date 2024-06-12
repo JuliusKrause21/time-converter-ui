@@ -1,4 +1,4 @@
-import { Box, styled } from '@mui/material';
+import { Box, CardActions, styled } from '@mui/material';
 import Card from '@mui/material/Card';
 
 export const CardContainerStyled = styled('div')({
@@ -22,6 +22,12 @@ export const CardStyled = styled(Card)({
   border: '1px solid white',
   background: 'transparent',
   color: 'white'
+});
+
+export const CardActionsStyled = styled(CardActions)({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between'
 });
 
 export const FormWrapperStyled = styled(Box)({
