@@ -1,18 +1,10 @@
-# GNSS Time Converter
+# time-converter-ui
 
-GNSS time is calculated in `week` and `time of week`. Starting at 06.01.1980 at 00:00:00 with week and time of week being 0.
-The offset to UTC was +/-0 which increased over time according to [Wikipedia](https://de.wikipedia.org/wiki/GPS-Zeit).
+This is an UI to convert GNSS time, UTC and Unix time into one another, build around the [time-converter](https://github.com/JuliusKrause21/gnss-time-converter) library.
+## How to start development
 
-The Unix time stamp of that time is `315964800` which started at  `01.01.1970 at 00:00:00`.  
+1. Install dependencies
+> npm i
 
-## Development
- - [ ] User input for GNSS time
- - [ ] Calculate GNSS time to Unix
- - [ ] Calculate Day of year and year
- - [ ] Output calculated values in UI
- - [ ] Calculate GNSS time to UTC
- - [ ] Output calculated values in UI
- - [ ] User input for UNIX time
- - [ ] Calculate UNIX time to GNSS
- - [ ] Calculate UNIX time to UTC
-
+2. Startup development server
+> npm run dev
