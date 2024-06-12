@@ -3,9 +3,12 @@ import Card from '@mui/material/Card';
 
 export const CardContainerStyled = styled('div')({
   display: 'flex',
+  flexDirection: 'column',
   justifyContent: 'center',
+  alignItems: 'center',
   width: '100%',
-  margin: '0 10px'
+  margin: '0 25px',
+  rowGap: '20px'
 });
 
 export const CardStyled = styled(Card)({
