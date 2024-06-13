@@ -29,6 +29,7 @@ const Overlay: FC<OverlayProps> = ({ conversionResult }) => {
   return (
     <OverlayStyled>
       <CardContainerStyled>
+        <h2>Time Conversion Results</h2>
         <ConversionResult title="Gnss Time" content={conversionResult?.gnssTime} />
         <ConversionResult
           title="UTC"

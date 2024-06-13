@@ -5,7 +5,7 @@ export const OverlayStyled = styled('div')(() => ({
   justifyContent: 'center',
   alignItems: 'center',
   width: '100vw',
-  height: '100vh',
+  minHeight: '100vh',
   backdropFilter: 'blur(20px)',
   WebkitBackdropFilter: 'blur(20px)',
   overflowY: 'scroll'
