@@ -28,7 +28,7 @@ const CollapseContent: FC<CollapseContentProps> = ({ expand, content }) => {
   function renderTableRows(): ReactNode {
     if (isGnssTime(content)) {
       return Object.keys(gnssTableRows).map(key => (
-        <TableRow>
+        <TableRow key={key}>
           <TableCell>{gnssTableRows[key as keyof GnssTime]}</TableCell>
           <TableCell>{content[key as keyof GnssTime]}</TableCell>
         </TableRow>
@@ -36,7 +36,7 @@ const CollapseContent: FC<CollapseContentProps> = ({ expand, content }) => {
     }
     if (isDateTime(content)) {
       return Object.keys(dateTimeTableRows).map(key => (
-        <TableRow>
+        <TableRow key={key}>
           <TableCell>{dateTimeTableRows[key as keyof DateTime]}</TableCell>
           <TableCell>{content[key as keyof DateTime]}</TableCell>
         </TableRow>
@@ -44,12 +44,13 @@ const CollapseContent: FC<CollapseContentProps> = ({ expand, content }) => {
     }
     if (isAdditionalInfo(content)) {
       return Object.keys(additionalInfoRows).map(key => (
-        <TableRow>
+        <TableRow key={key}>
           <TableCell>{additionalInfoRows[key as keyof AdditionalInfo]}</TableCell>
-          <TableCell>{content[key as keyof AdditionalInfo]}</TableCell>
+          <TableCell>{`${content[key as keyof AdditionalInfo]}`}</TableCell>
         </TableRow>
       ));
     }
+    return null;
   }
   return (
     <Collapse in={expand} timeout="auto" unmountOnExit>
