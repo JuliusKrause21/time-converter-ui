@@ -1,7 +1,4 @@
-export interface GnssTime {
-  week: number;
-  timeOfWeek: number;
-}
+import { GnssTime } from '../models/GnssTime.ts';
 
 export const unixAtGpsZero = 315964800;
 export const maxTimeOfWeek = 604800;

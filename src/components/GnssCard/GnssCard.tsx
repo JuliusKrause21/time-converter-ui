@@ -1,8 +1,9 @@
 import { FC, ReactElement, useState } from 'react';
 import { Button, TextField } from '@mui/material';
-import { GnssTime, isValidGnssTime, maxTimeOfWeek } from '../../utils/convertGnssToUnix.ts';
+import { isValidGnssTime, maxTimeOfWeek } from '../../utils/convertGnssToUnix.ts';
 import { ButtonWrapperStyled, CardStyled, FormWrapperStyled } from '../CardContainer.style.ts';
 import { FieldState, initialFieldState } from '../../models/FieldState.ts';
+import { GnssTime } from '../../models/GnssTime.ts';
 
 enum GnssValidationError {
   Required = 'Value is required',

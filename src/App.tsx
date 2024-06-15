@@ -1,11 +1,12 @@
-import { Button, createTheme, styled, ThemeProvider } from '@mui/material';
+import { createTheme, styled, ThemeProvider } from '@mui/material';
 import background from './assets/watch_background.jpg';
 import { useState } from 'react';
 import { TimeConverter } from '@jk21/time-converter';
 import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
 import GnssCard from './components/GnssCard/GnssCard.tsx';
-import { GnssTime } from './utils/convertGnssToUnix.ts';
 import { CardContainerStyled } from './components/CardContainer.style.ts';
+import Overlay from './components/Overlay/Overlay.tsx';
+import { GnssTime } from './models/GnssTime.ts';
 
 export const breakpointValues = { xs: 360, sm: 600, md: 900, lg: 1200, xl: 1920 };
 
@@ -55,6 +56,22 @@ const theme = createTheme({
           }
         }
       }
+    },
+    MuiTableRow: {
+      styleOverrides: {
+        root: {
+          '&:last-child td': {
+            borderBottom: '0'
+          }
+        }
+      }
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          color: 'white'
+        }
+      }
     }
   },
   breakpoints: {
@@ -77,21 +94,8 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <PageContainer>
-        {showOverlay ? (
-          <OverlayStyled>
-            <ul>
-              <li>Week: {conversionResult?.gnssTime?.week}</li>
-              <li>Time of week: {conversionResult?.gnssTime?.timeOfWeek}</li>
-              <li>Year: {conversionResult?.utc.getFullYear()}</li>
-              <li>Month: {conversionResult?.utc.getMonth()}</li>
-              <li>Day: {conversionResult?.utc.getDate()}</li>
-              <li>Unix: {conversionResult?.unixTime}</li>
-            </ul>
-
-            <Button variant="contained" onClick={() => setShowOverlay(false)}>
-              Go back
-            </Button>
-          </OverlayStyled>
+        {showOverlay && conversionResult ? (
+          <Overlay conversionResult={conversionResult} />
         ) : (
           <CardContainerStyled>
             <GnssCard onSubmit={gnssTime => convertGnssTime(gnssTime)} />
@@ -101,16 +105,6 @@ function App() {
     </ThemeProvider>
   );
 }
-
-const OverlayStyled = styled('div')(() => ({
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  width: '100vw',
-  height: '100vh',
-  backdropFilter: 'blur(20px)',
-  WebkitBackdropFilter: 'blur(20px)'
-}));
 
 const PageContainer = styled('div')(() => ({
   margin: 0,

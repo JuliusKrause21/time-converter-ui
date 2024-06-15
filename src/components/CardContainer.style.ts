@@ -1,11 +1,14 @@
-import { Box, styled } from '@mui/material';
+import { Box, CardActions, styled } from '@mui/material';
 import Card from '@mui/material/Card';
 
 export const CardContainerStyled = styled('div')({
   display: 'flex',
+  flexDirection: 'column',
   justifyContent: 'center',
+  alignItems: 'center',
   width: '100%',
-  margin: '0 10px'
+  margin: '0 25px',
+  rowGap: '20px'
 });
 
 export const CardStyled = styled(Card)({
@@ -19,6 +22,12 @@ export const CardStyled = styled(Card)({
   border: '1px solid white',
   background: 'transparent',
   color: 'white'
+});
+
+export const CardActionsStyled = styled(CardActions)({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between'
 });
 
 export const FormWrapperStyled = styled(Box)({
