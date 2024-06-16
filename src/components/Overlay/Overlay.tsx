@@ -5,7 +5,7 @@ import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
 import ConversionResult, { ConversionResultTitle } from './ConversionResult/ConversionResult.tsx';
 import { buildDateString, buildTimeString } from '../../utils/buildUtcStings.ts';
 import { TimeFormat } from '../../App.tsx';
-import CancelButton from './CancelButton/CancelButton.tsx';
+import ConversionResultHeader from './Header/ConversionResultHeader.tsx';
 
 const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const months = [
@@ -33,18 +33,7 @@ const Overlay: FC<OverlayProps> = ({ conversionResult, convertedFormat, onClose 
   return (
     <OverlayStyled>
       <CardContainerStyled>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            width: '100%',
-            marginTop: '20px'
-          }}
-        >
-          <h2>Time Conversion:</h2>
-          <CancelButton onClose={onClose} />
-        </div>
+        <ConversionResultHeader onClose={onClose} />
         <ConversionResult
           title={ConversionResultTitle.Gnss}
           open={convertedFormat !== TimeFormat.Gnss}

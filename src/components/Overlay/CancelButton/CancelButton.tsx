@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { CancelButtonStyled } from './CancelButton.style.ts';
 
-interface CancelButtonProps {
+export interface CancelButtonProps {
   onClose: () => void;
 }
 
