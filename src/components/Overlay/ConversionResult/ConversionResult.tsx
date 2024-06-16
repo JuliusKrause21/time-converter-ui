@@ -1,19 +1,20 @@
-import { CardActionsStyled, CardStyled } from '../CardContainer.style.ts';
+import { CardActionsStyled, CardStyled } from '../../CardContainer.style.ts';
 import { Typography } from '@mui/material';
-import ExpandButton from './ExpandButton/ExpandButton.tsx';
-import CollapseContent from './CollapseContent/CollapseContent.tsx';
+import ExpandButton from '../ExpandButton/ExpandButton.tsx';
+import CollapseContent from '../CollapseContent/CollapseContent.tsx';
 import { FC, useState } from 'react';
-import { GnssTime } from '../../models/GnssTime.ts';
-import { DateTime } from '../../models/DateTime.ts';
-import { AdditionalInfo } from '../../models/AdditionalInfo.ts';
+import { GnssTime } from '../../../models/GnssTime.ts';
+import { DateTime } from '../../../models/DateTime.ts';
+import { AdditionalInfo } from '../../../models/AdditionalInfo.ts';
 
 interface ConversionResultProps {
   title: string;
+  open: boolean;
   content: GnssTime | DateTime | AdditionalInfo | undefined;
 }
 
-const ConversionResult: FC<ConversionResultProps> = ({ title, content }) => {
-  const [expanded, setExpanded] = useState(false);
+const ConversionResult: FC<ConversionResultProps> = ({ title, open, content }) => {
+  const [expanded, setExpanded] = useState(open);
 
   return (
     <CardStyled>
