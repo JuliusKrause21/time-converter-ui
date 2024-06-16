@@ -7,8 +7,14 @@ import { GnssTime } from '../../../models/GnssTime.ts';
 import { DateTime } from '../../../models/DateTime.ts';
 import { AdditionalInfo } from '../../../models/AdditionalInfo.ts';
 
+export enum ConversionResultTitle {
+  Gnss = 'Gnss Time',
+  Utc = 'Utc',
+  Additional = 'Additional Info'
+}
+
 interface ConversionResultProps {
-  title: string;
+  title: ConversionResultTitle;
   open: boolean;
   content: GnssTime | DateTime | AdditionalInfo | undefined;
 }
