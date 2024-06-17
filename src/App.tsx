@@ -79,15 +79,23 @@ const theme = createTheme({
   }
 });
 
+export enum TimeFormat {
+  Gnss,
+  Utc,
+  Unix
+}
+
 function App() {
   const [conversionResult, setConversionResult] = useState<TimeConversionResult>();
   const [showOverlay, setShowOverlay] = useState(false);
+  const [convertedFormat, setConvertedFormat] = useState<TimeFormat | undefined>();
 
   const timeConverter = new TimeConverter();
 
   const convertGnssTime = (gnssTime: GnssTime) => {
     const result = timeConverter.convertGnssTime(gnssTime);
     setConversionResult(result);
+    setConvertedFormat(TimeFormat.Gnss);
     setShowOverlay(true);
   };
 
@@ -95,7 +103,11 @@ function App() {
     <ThemeProvider theme={theme}>
       <PageContainer>
         {showOverlay && conversionResult ? (
-          <Overlay conversionResult={conversionResult} />
+          <Overlay
+            conversionResult={conversionResult}
+            convertedFormat={convertedFormat}
+            onClose={() => setShowOverlay(false)}
+          />
         ) : (
           <CardContainerStyled>
             <GnssCard onSubmit={gnssTime => convertGnssTime(gnssTime)} />

@@ -7,6 +7,8 @@ export const CardContainerStyled = styled('div')({
   justifyContent: 'center',
   alignItems: 'center',
   width: '100%',
+  maxWidth: '750px',
+  minWidth: '250px',
   margin: '0 25px',
   rowGap: '20px'
 });
@@ -16,8 +18,6 @@ export const CardStyled = styled(Card)({
   flexDirection: 'column',
   padding: 15,
   width: '100%',
-  maxWidth: '750px',
-  minWidth: '250px',
   borderRadius: '8px',
   border: '1px solid white',
   background: 'transparent',
