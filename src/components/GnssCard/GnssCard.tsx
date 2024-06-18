@@ -4,6 +4,8 @@ import { isValidGnssTime, maxTimeOfWeek } from '../../utils/convertGnssToUnix.ts
 import { ButtonWrapperStyled, CardStyled, FormWrapperStyled } from '../CardContainer.style.ts';
 import { FieldState, initialFieldState } from '../../models/FieldState.ts';
 import { GnssTime } from '../../models/GnssTime.ts';
+import { TimeConverter } from '@jk21/time-converter';
+import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
 
 enum GnssValidationError {
   Required = 'Value is required',
@@ -12,12 +14,20 @@ enum GnssValidationError {
 }
 
 interface GnssCardProps {
-  onSubmit: (value: GnssTime) => void;
+  onSubmit: (result: TimeConversionResult) => void;
 }
 
 const GnssCard: FC<GnssCardProps> = ({ onSubmit }): ReactElement => {
   const [week, setWeek] = useState<FieldState<string>>(initialFieldState<string>(''));
   const [timeOfWeek, setTimeOfWeek] = useState<FieldState<string>>(initialFieldState<string>(''));
+
+  const timeConverter = new TimeConverter();
+
+  const convertGnssTime = (gnssTime: GnssTime): void => {
+    const result = timeConverter.convertGnssTime(gnssTime);
+    onSubmit(result);
+    return;
+  };
 
   const handleSubmit = () => {
     if (!isValidForm(week.value, timeOfWeek.value)) {
@@ -30,7 +40,7 @@ const GnssCard: FC<GnssCardProps> = ({ onSubmit }): ReactElement => {
       return;
     }
 
-    onSubmit(gnssTime);
+    convertGnssTime(gnssTime);
   };
 
   const handleClear = () => {
