@@ -16,8 +16,8 @@ interface GnssCardProps {
 }
 
 const GnssCard: FC<GnssCardProps> = ({ onSubmit }): ReactElement => {
-  const [week, setWeek] = useState<FieldState<string>>(initialFieldState);
-  const [timeOfWeek, setTimeOfWeek] = useState<FieldState<string>>(initialFieldState);
+  const [week, setWeek] = useState<FieldState<string>>(initialFieldState<string>(''));
+  const [timeOfWeek, setTimeOfWeek] = useState<FieldState<string>>(initialFieldState<string>(''));
 
   const handleSubmit = () => {
     if (!isValidForm(week.value, timeOfWeek.value)) {
@@ -34,8 +34,8 @@ const GnssCard: FC<GnssCardProps> = ({ onSubmit }): ReactElement => {
   };
 
   const handleClear = () => {
-    setWeek(initialFieldState);
-    setTimeOfWeek(initialFieldState);
+    setWeek(initialFieldState<string>(''));
+    setTimeOfWeek(initialFieldState<string>(''));
   };
 
   function isValidWeek(week: string): boolean {

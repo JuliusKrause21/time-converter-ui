@@ -1,4 +1,4 @@
-import { createTheme, styled, ThemeProvider } from '@mui/material';
+import { createTheme, IconButton, styled, ThemeProvider } from '@mui/material';
 import background from './assets/watch_background.jpg';
 import { useState } from 'react';
 import { TimeConverter } from '@jk21/time-converter';
@@ -7,6 +7,8 @@ import GnssCard from './components/GnssCard/GnssCard.tsx';
 import { CardContainerStyled } from './components/CardContainer.style.ts';
 import Overlay from './components/Overlay/Overlay.tsx';
 import { GnssTime } from './models/GnssTime.ts';
+import { KeyboardArrowDownOutlined, KeyboardArrowUpOutlined } from '@mui/icons-material';
+import UnixCard from './components/UnixCard/UnixCard.tsx';
 
 export const breakpointValues = { xs: 360, sm: 600, md: 900, lg: 1200, xl: 1920 };
 
@@ -89,14 +91,48 @@ function App() {
   const [conversionResult, setConversionResult] = useState<TimeConversionResult>();
   const [showOverlay, setShowOverlay] = useState(false);
   const [convertedFormat, setConvertedFormat] = useState<TimeFormat | undefined>();
+  const [activeTimeFormat, setActiveTimeFormat] = useState<TimeFormat>(TimeFormat.Gnss);
 
   const timeConverter = new TimeConverter();
 
-  const convertGnssTime = (gnssTime: GnssTime) => {
+  const convertGnssTime = (gnssTime: GnssTime): void => {
     const result = timeConverter.convertGnssTime(gnssTime);
     setConversionResult(result);
     setConvertedFormat(TimeFormat.Gnss);
     setShowOverlay(true);
+    return;
+  };
+
+  const convertUnixTime = (unixTime: number): void => {
+    const result = timeConverter.convertUnixTime(unixTime);
+    setConversionResult(result);
+    setConvertedFormat(TimeFormat.Unix);
+    setShowOverlay(true);
+    return;
+  };
+
+  const handleCardShiftUp = (): void => {
+    switch (activeTimeFormat) {
+      case TimeFormat.Gnss:
+        setActiveTimeFormat(TimeFormat.Unix);
+        break;
+      case TimeFormat.Unix:
+        setActiveTimeFormat(TimeFormat.Gnss);
+        break;
+    }
+    return;
+  };
+
+  const handleCardShiftDown = (): void => {
+    switch (activeTimeFormat) {
+      case TimeFormat.Gnss:
+        setActiveTimeFormat(TimeFormat.Unix);
+        break;
+      case TimeFormat.Unix:
+        setActiveTimeFormat(TimeFormat.Gnss);
+        break;
+    }
+    return;
   };
 
   return (
@@ -110,7 +146,18 @@ function App() {
           />
         ) : (
           <CardContainerStyled>
-            <GnssCard onSubmit={gnssTime => convertGnssTime(gnssTime)} />
+            {activeTimeFormat !== TimeFormat.Gnss && (
+              <IconButton size="large" onClick={handleCardShiftUp}>
+                <KeyboardArrowUpOutlined color="primary" />
+              </IconButton>
+            )}
+            {activeTimeFormat === TimeFormat.Gnss && <GnssCard onSubmit={gnssTime => convertGnssTime(gnssTime)} />}
+            {activeTimeFormat === TimeFormat.Unix && <UnixCard onSubmit={unixTime => convertUnixTime(unixTime)} />}
+            {activeTimeFormat !== TimeFormat.Unix && (
+              <IconButton size="large" onClick={handleCardShiftDown}>
+                <KeyboardArrowDownOutlined color="primary" />
+              </IconButton>
+            )}
           </CardContainerStyled>
         )}
       </PageContainer>
