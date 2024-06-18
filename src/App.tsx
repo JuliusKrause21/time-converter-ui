@@ -9,6 +9,7 @@ import Overlay from './components/Overlay/Overlay.tsx';
 import { GnssTime } from './models/GnssTime.ts';
 import { KeyboardArrowDownOutlined, KeyboardArrowUpOutlined } from '@mui/icons-material';
 import UnixCard from './components/UnixCard/UnixCard.tsx';
+import { motion, useAnimationControls } from 'framer-motion';
 
 export const breakpointValues = { xs: 360, sm: 600, md: 900, lg: 1200, xl: 1920 };
 
@@ -94,6 +95,7 @@ function App() {
   const [activeTimeFormat, setActiveTimeFormat] = useState<TimeFormat>(TimeFormat.Gnss);
 
   const timeConverter = new TimeConverter();
+  const controls = useAnimationControls();
 
   const convertGnssTime = (gnssTime: GnssTime): void => {
     const result = timeConverter.convertGnssTime(gnssTime);
@@ -111,28 +113,48 @@ function App() {
     return;
   };
 
-  const handleCardShiftUp = (): void => {
+  const handleCardShiftUp = async (): Promise<void> => {
     switch (activeTimeFormat) {
       case TimeFormat.Gnss:
+        await startRemoveAnimation();
         setActiveTimeFormat(TimeFormat.Unix);
+        await startAppearAnimation();
         break;
       case TimeFormat.Unix:
+        await startRemoveAnimation();
         setActiveTimeFormat(TimeFormat.Gnss);
+        await startAppearAnimation();
         break;
     }
     return;
   };
 
-  const handleCardShiftDown = (): void => {
+  const handleCardShiftDown = async (): Promise<void> => {
     switch (activeTimeFormat) {
       case TimeFormat.Gnss:
+        await startRemoveAnimation();
         setActiveTimeFormat(TimeFormat.Unix);
+        await startAppearAnimation();
         break;
       case TimeFormat.Unix:
+        await startRemoveAnimation();
         setActiveTimeFormat(TimeFormat.Gnss);
+        await startAppearAnimation();
         break;
     }
     return;
+  };
+
+  const startRemoveAnimation = async (): Promise<void> => {
+    await controls.start({
+      scale: [1, 0]
+    });
+  };
+
+  const startAppearAnimation = async (): Promise<void> => {
+    await controls.start({
+      scale: [0, 1]
+    });
   };
 
   return (
@@ -151,8 +173,14 @@ function App() {
                 <KeyboardArrowUpOutlined color="primary" />
               </IconButton>
             )}
-            {activeTimeFormat === TimeFormat.Gnss && <GnssCard onSubmit={gnssTime => convertGnssTime(gnssTime)} />}
-            {activeTimeFormat === TimeFormat.Unix && <UnixCard onSubmit={unixTime => convertUnixTime(unixTime)} />}
+            <motion.div
+              style={{ width: '100%', display: 'flex' }}
+              animate={controls}
+              transition={{ times: [0, 0.5, 1], duration: 0.25 }}
+            >
+              {activeTimeFormat === TimeFormat.Gnss && <GnssCard onSubmit={gnssTime => convertGnssTime(gnssTime)} />}
+              {activeTimeFormat !== TimeFormat.Gnss && <UnixCard onSubmit={unixTime => convertUnixTime(unixTime)} />}
+            </motion.div>
             {activeTimeFormat !== TimeFormat.Unix && (
               <IconButton size="large" onClick={handleCardShiftDown}>
                 <KeyboardArrowDownOutlined color="primary" />
