@@ -8,6 +8,7 @@ import { useAnimationControls } from 'framer-motion';
 import { FC, useState } from 'react';
 import { CardContainerStyled } from '../CardContainer.style.ts';
 import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
+import UtcCard from '../UtcCard/UtcCard.tsx';
 
 interface CardsContentProps {
   onTimeConversion: (result: TimeConversionResult, format: TimeFormat) => void;
@@ -24,9 +25,14 @@ const CardsContent: FC<CardsContentProps> = ({ onTimeConversion }) => {
         setActiveTimeFormat(TimeFormat.Unix);
         await startAppearAnimation();
         break;
-      case TimeFormat.Unix:
+      case TimeFormat.Utc:
         await startRemoveAnimation();
         setActiveTimeFormat(TimeFormat.Gnss);
+        await startAppearAnimation();
+        break;
+      case TimeFormat.Unix:
+        await startRemoveAnimation();
+        setActiveTimeFormat(TimeFormat.Utc);
         await startAppearAnimation();
         break;
     }
@@ -36,6 +42,11 @@ const CardsContent: FC<CardsContentProps> = ({ onTimeConversion }) => {
   const handleCardShiftDown = async (): Promise<void> => {
     switch (activeTimeFormat) {
       case TimeFormat.Gnss:
+        await startRemoveAnimation();
+        setActiveTimeFormat(TimeFormat.Utc);
+        await startAppearAnimation();
+        break;
+      case TimeFormat.Utc:
         await startRemoveAnimation();
         setActiveTimeFormat(TimeFormat.Unix);
         await startAppearAnimation();
@@ -72,7 +83,10 @@ const CardsContent: FC<CardsContentProps> = ({ onTimeConversion }) => {
         {activeTimeFormat === TimeFormat.Gnss && (
           <GnssCard onSubmit={result => onTimeConversion(result, TimeFormat.Gnss)} />
         )}
-        {activeTimeFormat !== TimeFormat.Gnss && (
+        {activeTimeFormat === TimeFormat.Utc && (
+          <UtcCard onSubmit={result => onTimeConversion(result, TimeFormat.Utc)} />
+        )}
+        {activeTimeFormat === TimeFormat.Unix && (
           <UnixCard onSubmit={result => onTimeConversion(result, TimeFormat.Unix)} />
         )}
       </CardsAnimation>

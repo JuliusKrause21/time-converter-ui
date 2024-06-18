@@ -32,6 +32,10 @@ const UnixCard: FC<UnixCardProps> = ({ onSubmit }): ReactElement => {
     convertUnixTime(+unixTime.value);
   };
 
+  const handleClear = () => {
+    setUnixTime(initialFieldState<string>(''));
+  };
+
   function isValidUnixTime(value: string): boolean {
     const mappedUnixTime = value === '' ? undefined : +value;
     if (mappedUnixTime === undefined) {
@@ -45,10 +49,6 @@ const UnixCard: FC<UnixCardProps> = ({ onSubmit }): ReactElement => {
     }
     return true;
   }
-
-  const handleClear = () => {
-    setUnixTime(initialFieldState<string>(''));
-  };
 
   return (
     <CardStyled>
