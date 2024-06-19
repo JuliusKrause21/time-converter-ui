@@ -1,12 +1,9 @@
 import { createTheme, styled, ThemeProvider } from '@mui/material';
 import background from './assets/watch_background.jpg';
-import { useState } from 'react';
-import { TimeConverter } from '@jk21/time-converter';
+import { ReactNode, useState } from 'react';
 import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
-import GnssCard from './components/GnssCard/GnssCard.tsx';
-import { CardContainerStyled } from './components/CardContainer.style.ts';
 import Overlay from './components/Overlay/Overlay.tsx';
-import { GnssTime } from './models/GnssTime.ts';
+import CardsContent from './components/CardsContent/CardsContent.tsx';
 
 export const breakpointValues = { xs: 360, sm: 600, md: 900, lg: 1200, xl: 1920 };
 
@@ -90,30 +87,29 @@ function App() {
   const [showOverlay, setShowOverlay] = useState(false);
   const [convertedFormat, setConvertedFormat] = useState<TimeFormat | undefined>();
 
-  const timeConverter = new TimeConverter();
-
-  const convertGnssTime = (gnssTime: GnssTime) => {
-    const result = timeConverter.convertGnssTime(gnssTime);
+  const handleTimeConversionResult = (result: TimeConversionResult, format: TimeFormat): void => {
     setConversionResult(result);
-    setConvertedFormat(TimeFormat.Gnss);
+    setConvertedFormat(format);
     setShowOverlay(true);
   };
 
+  function renderContent(): ReactNode {
+    if (showOverlay && conversionResult !== undefined) {
+      return (
+        <Overlay
+          conversionResult={conversionResult}
+          convertedFormat={convertedFormat}
+          onClose={() => setShowOverlay(false)}
+        />
+      );
+    } else {
+      return <CardsContent onTimeConversion={handleTimeConversionResult} />;
+    }
+  }
+
   return (
     <ThemeProvider theme={theme}>
-      <PageContainer>
-        {showOverlay && conversionResult ? (
-          <Overlay
-            conversionResult={conversionResult}
-            convertedFormat={convertedFormat}
-            onClose={() => setShowOverlay(false)}
-          />
-        ) : (
-          <CardContainerStyled>
-            <GnssCard onSubmit={gnssTime => convertGnssTime(gnssTime)} />
-          </CardContainerStyled>
-        )}
-      </PageContainer>
+      <PageContainer>{renderContent()}</PageContainer>
     </ThemeProvider>
   );
 }

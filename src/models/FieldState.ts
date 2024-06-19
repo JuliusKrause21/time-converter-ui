@@ -4,4 +4,4 @@ export interface FieldState<T> {
   message?: string;
 }
 
-export const initialFieldState: FieldState<string> = { value: '', error: false };
+export const initialFieldState = <T>(value: T): FieldState<T> => ({ value, error: false });

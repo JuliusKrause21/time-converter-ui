@@ -1,13 +1,12 @@
-import { FC, ReactElement } from 'react';
+import { FC, ReactElement, useState } from 'react';
 import { ButtonWrapperStyled, CardStyled, FormWrapperStyled } from '../CardContainer.style.ts';
 import { Button, TextField } from '@mui/material';
-import { FieldState } from '../../models/FieldState.ts';
+import { FieldState, initialFieldState } from '../../models/FieldState.ts';
+import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
+import { TimeConverter } from '@jk21/time-converter';
 
 interface UnixCardProps {
-  unixTime: FieldState<string>;
-  setUnixTime: (value: ((prevState: FieldState<string>) => FieldState<string>) | FieldState<string>) => void;
-  onSubmit: (value: number) => void;
-  onClear: () => void;
+  onSubmit: (result: TimeConversionResult) => void;
 }
 
 enum UnixValidationError {
@@ -15,12 +14,22 @@ enum UnixValidationError {
   NotNegative = 'Unix time must not be less than 0'
 }
 
-const UnixCard: FC<UnixCardProps> = ({ unixTime, setUnixTime, onSubmit, onClear }): ReactElement => {
+const UnixCard: FC<UnixCardProps> = ({ onSubmit }): ReactElement => {
+  const [unixTime, setUnixTime] = useState<FieldState<string>>(initialFieldState<string>(''));
+
+  const timeConverter = new TimeConverter();
+
+  const convertUnixTime = (unixTime: number): void => {
+    const result = timeConverter.convertUnixTime(unixTime);
+    onSubmit(result);
+    return;
+  };
+
   const handleSubmit = () => {
     if (!isValidUnixTime(unixTime.value)) {
       return;
     }
-    onSubmit(+unixTime.value);
+    convertUnixTime(+unixTime.value);
   };
 
   function isValidUnixTime(value: string): boolean {
@@ -37,9 +46,13 @@ const UnixCard: FC<UnixCardProps> = ({ unixTime, setUnixTime, onSubmit, onClear 
     return true;
   }
 
+  const handleClear = () => {
+    setUnixTime(initialFieldState<string>(''));
+  };
+
   return (
     <CardStyled>
-      <h2>UNIX</h2>
+      <h1>Unix</h1>
       <FormWrapperStyled>
         <TextField
           type="number"
@@ -57,7 +70,7 @@ const UnixCard: FC<UnixCardProps> = ({ unixTime, setUnixTime, onSubmit, onClear 
         <Button variant="contained" onClick={handleSubmit}>
           Submit
         </Button>
-        <Button variant="outlined" onClick={onClear}>
+        <Button variant="outlined" onClick={handleClear}>
           Clear
         </Button>
       </ButtonWrapperStyled>
