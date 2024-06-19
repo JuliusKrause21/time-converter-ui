@@ -73,7 +73,7 @@ const CardsContent: FC<CardsContentProps> = ({ onTimeConversion }) => {
           <GnssCard onSubmit={result => onTimeConversion(result, TimeFormat.Gnss)} />
         )}
         {activeTimeFormat !== TimeFormat.Gnss && (
-          <UnixCard onSubmit={unixTime => onTimeConversion(unixTime, TimeFormat.Unix)} />
+          <UnixCard onSubmit={result => onTimeConversion(result, TimeFormat.Unix)} />
         )}
       </CardsAnimation>
       {activeTimeFormat !== TimeFormat.Unix && (
