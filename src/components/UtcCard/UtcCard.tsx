@@ -43,13 +43,39 @@ const UtcCard: FC<UtcCardProps> = ({ onSubmit }) => {
       <h1>Utc</h1>
       <FormWrapperStyled>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <MobileDatePicker label="Date" value={date.value} onChange={value => handleDateChange(value)} />
+          <MobileDatePicker
+            label="Date"
+            value={date.value}
+            onChange={value => handleDateChange(value)}
+            slotProps={{
+              dialog: {
+                sx: {
+                  '& .MuiDialog-paper': {
+                    backgroundColor: '#98865e',
+                    borderRadius: '10px',
+                    boxShadow: '0 3px 5px rgba(0, 0, 0, 0.3)'
+                  }
+                }
+              }
+            }}
+          />
           <MobileTimePicker
             label="Time"
             views={['hours', 'minutes', 'seconds']}
             format={'hh:mm:ss'}
             value={date.value}
             onChange={value => handleDateChange(value)}
+            slotProps={{
+              dialog: {
+                sx: {
+                  '& .MuiDialog-paper': {
+                    backgroundColor: '#98865e',
+                    borderRadius: '10px',
+                    boxShadow: '0 3px 5px rgba(0, 0, 0, 0.3)'
+                  }
+                }
+              }
+            }}
           />
         </LocalizationProvider>
       </FormWrapperStyled>
