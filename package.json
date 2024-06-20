@@ -16,6 +16,8 @@
     "@jk21/time-converter": "^1.0.1",
     "@mui/icons-material": "^5.15.19",
     "@mui/material": "^5.15.19",
+    "@mui/x-date-pickers": "^7.7.0",
+    "dayjs": "^1.11.11",
     "framer-motion": "^11.2.10",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
