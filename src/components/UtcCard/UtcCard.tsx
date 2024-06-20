@@ -4,6 +4,7 @@ import { TimeConverter } from '@jk21/time-converter';
 import { LocalizationProvider, MobileDatePicker, MobileTimePicker } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import utc from 'dayjs/plugin/utc';
 import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
 import { FC, useState } from 'react';
 import { FieldState, initialFieldState } from '../../models/FieldState.ts';
@@ -12,23 +13,25 @@ interface UtcCardProps {
   onSubmit: (result: TimeConversionResult) => void;
 }
 
-const UtcCard: FC<UtcCardProps> = ({ onSubmit }) => {
-  const now = new Date();
-  const currentDate = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
+dayjs.extend(utc);
 
-  const [date, setDate] = useState<FieldState<Dayjs>>(initialFieldState<Dayjs>(dayjs(currentDate)));
+const UtcCard: FC<UtcCardProps> = ({ onSubmit }) => {
+  const currentDate = new Date();
+
+  const [date, setDate] = useState<FieldState<Dayjs>>(initialFieldState<Dayjs>(dayjs.utc(currentDate)));
 
   const timeConverter = new TimeConverter();
 
   const handleSubmit = () => {
-    const result = timeConverter.convertUtc(date.value.toDate());
-    console.log(result);
+    const utc = date.value.toDate();
+    utc.setMilliseconds(0);
+    const result = timeConverter.convertUtc(utc);
     onSubmit(result);
     return;
   };
 
   const handleClear = () => {
-    setDate(initialFieldState<Dayjs>(dayjs(currentDate)));
+    setDate(initialFieldState<Dayjs>(dayjs.utc(currentDate)));
   };
 
   const handleDateChange = (value: Dayjs | null) => {
@@ -46,6 +49,7 @@ const UtcCard: FC<UtcCardProps> = ({ onSubmit }) => {
           <MobileDatePicker
             label="Date"
             value={date.value}
+            timezone={'UTC'}
             onChange={value => handleDateChange(value)}
             slotProps={{
               dialog: {
