@@ -11,7 +11,8 @@ export const CardContainerStyled = styled('div')({
   minWidth: '250px',
   margin: '0 25px',
   rowGap: '20px',
-  marginTop: '40px'
+  marginTop: '40px',
+  zIndex: 1
 });
 
 export const CardStyled = styled(Card)({

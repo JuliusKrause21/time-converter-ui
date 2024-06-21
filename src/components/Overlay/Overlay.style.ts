@@ -8,7 +8,11 @@ export const OverlayStyled = styled('div')(() => ({
   alignItems: 'flex-start',
   width: '100vw',
   minHeight: '100vh',
-  overflowY: 'scroll'
+  overflowY: 'scroll',
+  position: 'absolute',
+  backdropFilter: 'blur(20px)',
+  WebkitBackdropFilter: 'blur(20px)',
+  zIndex: 2
 }));
 
 export const ResultCardStyled = styled(Card)({

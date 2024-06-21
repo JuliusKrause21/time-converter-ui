@@ -1,5 +1,5 @@
 import { createTheme, styled, ThemeProvider } from '@mui/material';
-import { ReactNode, useState } from 'react';
+import { useState } from 'react';
 import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
 import Overlay from './components/Overlay/Overlay.tsx';
 import CardsContent from './components/CardsContent/CardsContent.tsx';
@@ -73,44 +73,9 @@ const theme = createTheme({
       start: '#0b5000',
       contrastText: '#ffffff'
     }
-
-    // error: {
-    //   main: '#FF4B4BFF'
-    // }
   },
 
   components: {
-    // MuiInputLabel: {
-    //   styleOverrides: {
-    //     root: {
-    //       color: 'white',
-    //       '&.Mui-focused': {
-    //         color: 'white' // Change 'blue' to your desired focus color
-    //       }
-    //     }
-    //   }
-    // },
-    // MuiTextField: {
-    //   styleOverrides: {
-    //     root: {
-    //       '& .MuiInputBase-input': {
-    //         color: 'white' // Change to your desired text color
-    //       },
-    //       '& .MuiOutlinedInput-root': {
-    //         '& fieldset': {
-    //           border: ' 1px solid white',
-    //           color: 'white'
-    //         },
-    //         '&:hover fieldset': {
-    //           border: ' 1px solid white'
-    //         },
-    //         '&.Mui-focused fieldset': {
-    //           border: ' 1px solid white'
-    //         }
-    //       }
-    //     }
-    //   }
-    // },
     MuiTableRow: {
       styleOverrides: {
         root: {
@@ -123,7 +88,7 @@ const theme = createTheme({
     MuiTableCell: {
       styleOverrides: {
         root: {
-          color: 'white'
+          color: 'black'
         }
       }
     }
@@ -144,23 +109,18 @@ function App() {
     setShowOverlay(true);
   };
 
-  function renderContent(): ReactNode {
-    if (showOverlay && conversionResult !== undefined) {
-      return (
-        <Overlay
-          conversionResult={conversionResult}
-          convertedFormat={convertedFormat}
-          onClose={() => setShowOverlay(false)}
-        />
-      );
-    } else {
-      return <CardsContent onTimeConversion={handleTimeConversionResult} />;
-    }
-  }
-
   return (
     <ThemeProvider theme={theme}>
-      <PageContainer>{renderContent()}</PageContainer>
+      <PageContainer>
+        {showOverlay && conversionResult !== undefined && (
+          <Overlay
+            conversionResult={conversionResult}
+            convertedFormat={convertedFormat}
+            onClose={() => setShowOverlay(false)}
+          />
+        )}
+        <CardsContent onTimeConversion={handleTimeConversionResult} />
+      </PageContainer>
     </ThemeProvider>
   );
 }
