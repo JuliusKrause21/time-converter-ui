@@ -1,13 +1,15 @@
 import { FC, ReactElement, useState } from 'react';
 import { ButtonWrapperStyled, CardContentStyled, CardStyled, FormWrapperStyled } from '../CardContainer.style.ts';
-import { Button, TextField } from '@mui/material';
+import { Button, Fab, TextField } from '@mui/material';
 import { FieldState, initialFieldState } from '../../models/FieldState.ts';
 import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
 import { TimeConverter } from '@jk21/time-converter';
 import { UnixCardHeaderStyled } from './UnixCard.style.ts';
 import { TimeFormat } from '../../App.tsx';
+import { KeyboardArrowRightOutlined } from '@mui/icons-material';
 
 interface UnixCardProps {
+  onNext: () => void;
   onSubmit: (result: TimeConversionResult) => void;
 }
 
@@ -16,7 +18,7 @@ enum UnixValidationError {
   NotNegative = 'Unix time must not be less than 0'
 }
 
-const UnixCard: FC<UnixCardProps> = ({ onSubmit }): ReactElement => {
+const UnixCard: FC<UnixCardProps> = ({ onNext, onSubmit }): ReactElement => {
   const [unixTime, setUnixTime] = useState<FieldState<string>>(initialFieldState<string>(''));
 
   const timeConverter = new TimeConverter();
@@ -55,7 +57,10 @@ const UnixCard: FC<UnixCardProps> = ({ onSubmit }): ReactElement => {
   return (
     <CardStyled>
       <UnixCardHeaderStyled>
-        <h1>Unix</h1>
+        <h1 style={{ marginTop: 0 }}>Unix</h1>
+        <Fab size="large" onClick={onNext} color={TimeFormat.Unix}>
+          <KeyboardArrowRightOutlined />
+        </Fab>
       </UnixCardHeaderStyled>
       <CardContentStyled>
         <FormWrapperStyled>
@@ -73,7 +78,7 @@ const UnixCard: FC<UnixCardProps> = ({ onSubmit }): ReactElement => {
         </FormWrapperStyled>
         <ButtonWrapperStyled>
           <Button variant="contained" onClick={handleSubmit} color={TimeFormat.Unix}>
-            Submit
+            Convert
           </Button>
           <Button variant="outlined" onClick={handleClear} color={TimeFormat.Unix}>
             Clear

@@ -1,5 +1,5 @@
 import { FC, ReactElement, useState } from 'react';
-import { Button, TextField } from '@mui/material';
+import { Button, Fab, TextField } from '@mui/material';
 import { isValidGnssTime, maxTimeOfWeek } from '../../utils/convertGnssToUnix.ts';
 import { ButtonWrapperStyled, CardContentStyled, CardStyled, FormWrapperStyled } from '../CardContainer.style.ts';
 import { FieldState, initialFieldState } from '../../models/FieldState.ts';
@@ -8,6 +8,7 @@ import { TimeConverter } from '@jk21/time-converter';
 import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
 import { GnssCardHeaderStyled } from './GnssCard.style.ts';
 import { TimeFormat } from '../../App.tsx';
+import { KeyboardArrowRightOutlined } from '@mui/icons-material';
 
 enum GnssValidationError {
   Required = 'Value is required',
@@ -16,10 +17,11 @@ enum GnssValidationError {
 }
 
 interface GnssCardProps {
+  onNext: () => void;
   onSubmit: (result: TimeConversionResult) => void;
 }
 
-const GnssCard: FC<GnssCardProps> = ({ onSubmit }): ReactElement => {
+const GnssCard: FC<GnssCardProps> = ({ onNext, onSubmit }): ReactElement => {
   const [week, setWeek] = useState<FieldState<string>>(initialFieldState<string>(''));
   const [timeOfWeek, setTimeOfWeek] = useState<FieldState<string>>(initialFieldState<string>(''));
 
@@ -86,7 +88,10 @@ const GnssCard: FC<GnssCardProps> = ({ onSubmit }): ReactElement => {
   return (
     <CardStyled>
       <GnssCardHeaderStyled>
-        <h1>GNSS Time</h1>
+        <h1 style={{ marginTop: 0 }}>GNSS Time</h1>
+        <Fab size="large" onClick={onNext} color={TimeFormat.Gnss}>
+          <KeyboardArrowRightOutlined />
+        </Fab>
       </GnssCardHeaderStyled>
       <CardContentStyled>
         <FormWrapperStyled>
@@ -115,7 +120,7 @@ const GnssCard: FC<GnssCardProps> = ({ onSubmit }): ReactElement => {
         </FormWrapperStyled>
         <ButtonWrapperStyled>
           <Button onClick={handleSubmit} variant="contained" color={TimeFormat.Gnss}>
-            Submit
+            Convert
           </Button>
           <Button onClick={handleClear} variant="text" color={TimeFormat.Gnss}>
             Clear

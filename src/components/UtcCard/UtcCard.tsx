@@ -1,5 +1,5 @@
 import { ButtonWrapperStyled, CardContentStyled, CardStyled, FormWrapperStyled } from '../CardContainer.style.ts';
-import { Button } from '@mui/material';
+import { Button, Fab } from '@mui/material';
 import { TimeConverter } from '@jk21/time-converter';
 import { LocalizationProvider, MobileDatePicker, MobileTimePicker } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from 'dayjs';
@@ -10,14 +10,16 @@ import { FC, useState } from 'react';
 import { FieldState, initialFieldState } from '../../models/FieldState.ts';
 import { UtcCardHeaderStyled } from './UtcCard.style.ts';
 import { TimeFormat } from '../../App.tsx';
+import { KeyboardArrowRightOutlined } from '@mui/icons-material';
 
 interface UtcCardProps {
+  onNext: () => void;
   onSubmit: (result: TimeConversionResult) => void;
 }
 
 dayjs.extend(utc);
 
-const UtcCard: FC<UtcCardProps> = ({ onSubmit }) => {
+const UtcCard: FC<UtcCardProps> = ({ onNext, onSubmit }) => {
   const currentDate = new Date();
 
   const [date, setDate] = useState<FieldState<Dayjs>>(initialFieldState<Dayjs>(dayjs.utc(currentDate)));
@@ -46,7 +48,10 @@ const UtcCard: FC<UtcCardProps> = ({ onSubmit }) => {
   return (
     <CardStyled>
       <UtcCardHeaderStyled>
-        <h1>Utc</h1>
+        <h1 style={{ marginTop: 0 }}>Utc</h1>
+        <Fab size="large" onClick={onNext} color={TimeFormat.Utc}>
+          <KeyboardArrowRightOutlined />
+        </Fab>
       </UtcCardHeaderStyled>
       <CardContentStyled>
         <FormWrapperStyled>
@@ -90,7 +95,7 @@ const UtcCard: FC<UtcCardProps> = ({ onSubmit }) => {
         </FormWrapperStyled>
         <ButtonWrapperStyled>
           <Button variant="contained" onClick={handleSubmit} color={TimeFormat.Utc}>
-            Submit
+            Convert
           </Button>
           <Button variant="outlined" onClick={handleClear} color={TimeFormat.Utc}>
             Clear

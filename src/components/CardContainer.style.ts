@@ -26,6 +26,9 @@ export const CardStyled = styled(Card)({
 });
 
 export const CardHeaderStyled = styled('div')({
+  display: 'flex',
+  alignItems: 'self-start',
+  justifyContent: 'space-between',
   height: '100%',
   padding: '15px'
 });
