@@ -1,0 +1,54 @@
+name: deploy-pages
+
+on:
+  workflow_dispatch:
+    inputs:
+      runId:
+        description: 'Run id of build job'
+        required: true
+        type: number
+  workflow_run:
+    workflows:
+      - ci
+    types:
+      - completed
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - run: "echo ${{ inputs.runId || github.event.workflow_run.id }}"
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: artifacts
+          path: dist
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: JuliusKrause21/time-converter-ui
+          run-id: ${{ inputs.runId || github.event.workflow_run.id }}
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'dist'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
