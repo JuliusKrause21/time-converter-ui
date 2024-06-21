@@ -6,6 +6,7 @@ import ConversionResult, { ConversionResultTitle } from './ConversionResult/Conv
 import { buildDateString, buildTimeString } from '../../utils/buildUtcStings.ts';
 import { TimeFormat } from '../../App.tsx';
 import ConversionResultHeader from './Header/ConversionResultHeader.tsx';
+import { useTheme } from '@mui/material';
 
 const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const months = [
@@ -30,17 +31,20 @@ interface OverlayProps {
 }
 
 const Overlay: FC<OverlayProps> = ({ conversionResult, convertedFormat, onClose }) => {
+  const theme = useTheme();
   return (
     <OverlayStyled>
       <CardContainerStyled>
         <ConversionResultHeader onClose={onClose} />
         <ConversionResult
           title={ConversionResultTitle.Gnss}
+          headerColor={theme.palette[TimeFormat.Gnss]}
           open={convertedFormat !== TimeFormat.Gnss}
           content={conversionResult?.gnssTime}
         />
         <ConversionResult
           title={ConversionResultTitle.Utc}
+          headerColor={theme.palette[TimeFormat.Utc]}
           open={convertedFormat !== TimeFormat.Utc}
           content={{
             date: buildDateString(conversionResult.utc),
@@ -51,6 +55,7 @@ const Overlay: FC<OverlayProps> = ({ conversionResult, convertedFormat, onClose 
         />
         <ConversionResult
           title={ConversionResultTitle.Additional}
+          headerColor={theme.palette[TimeFormat.Unix]}
           open={convertedFormat !== TimeFormat.Unix}
           content={{
             unix: conversionResult.unixTime ?? 0,

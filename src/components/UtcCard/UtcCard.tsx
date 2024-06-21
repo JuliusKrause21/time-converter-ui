@@ -9,6 +9,7 @@ import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
 import { FC, useState } from 'react';
 import { FieldState, initialFieldState } from '../../models/FieldState.ts';
 import { UtcCardHeaderStyled } from './UtcCard.style.ts';
+import { TimeFormat } from '../../App.tsx';
 
 interface UtcCardProps {
   onSubmit: (result: TimeConversionResult) => void;
@@ -88,10 +89,10 @@ const UtcCard: FC<UtcCardProps> = ({ onSubmit }) => {
           </LocalizationProvider>
         </FormWrapperStyled>
         <ButtonWrapperStyled>
-          <Button variant="contained" onClick={handleSubmit} color="utc">
+          <Button variant="contained" onClick={handleSubmit} color={TimeFormat.Utc}>
             Submit
           </Button>
-          <Button variant="outlined" onClick={handleClear} color="utc">
+          <Button variant="outlined" onClick={handleClear} color={TimeFormat.Utc}>
             Clear
           </Button>
         </ButtonWrapperStyled>

@@ -4,58 +4,46 @@ import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
 import Overlay from './components/Overlay/Overlay.tsx';
 import CardsContent from './components/CardsContent/CardsContent.tsx';
 
+export enum TimeFormat {
+  Gnss = 'gnss',
+  Utc = 'utc',
+  Unix = 'unix'
+}
+
 export const breakpointValues = { xs: 360, sm: 600, md: 900, lg: 1200, xl: 1920 };
+
+export interface CustomColor {
+  main: string;
+  start: string;
+  contrastText: string;
+}
 
 declare module '@mui/material/styles' {
   interface Palette {
-    gnss: {
-      main: string;
-      start: string;
-      contrastText: string;
-    };
-    utc: {
-      main: string;
-      start: string;
-      contrastText: string;
-    };
-    unix: {
-      main: string;
-      start: string;
-      contrastText: string;
-    };
+    [TimeFormat.Gnss]: CustomColor;
+    [TimeFormat.Utc]: CustomColor;
+    [TimeFormat.Unix]: CustomColor;
   }
   interface PaletteOptions {
-    gnss: {
-      main: string;
-      start: string;
-      contrastText: string;
-    };
-    utc: {
-      main: string;
-      start: string;
-      contrastText: string;
-    };
-    unix: {
-      main: string;
-      start: string;
-      contrastText: string;
-    };
+    [TimeFormat.Gnss]: CustomColor;
+    [TimeFormat.Utc]: CustomColor;
+    [TimeFormat.Unix]: CustomColor;
   }
 }
 
 declare module '@mui/material/Button' {
   interface ButtonPropsColorOverrides {
-    gnss: true;
-    utc: true;
-    unix: true;
+    [TimeFormat.Gnss]: true;
+    [TimeFormat.Utc]: true;
+    [TimeFormat.Unix]: true;
   }
 }
 
 declare module '@mui/material/Fab' {
   export interface FabPropsColorOverrides {
-    gnss: true;
-    utc: true;
-    unix: true;
+    [TimeFormat.Gnss]: true;
+    [TimeFormat.Utc]: true;
+    [TimeFormat.Unix]: true;
   }
 }
 
@@ -70,17 +58,17 @@ const theme = createTheme({
       light: '#F5EBFF',
       contrastText: '#000'
     },
-    gnss: {
+    [TimeFormat.Gnss]: {
       main: '#9C009B',
       start: '#47019C',
       contrastText: '#ffffff'
     },
-    utc: {
+    [TimeFormat.Utc]: {
       main: '#008A9C',
       start: '#08329c',
       contrastText: '#ffffff'
     },
-    unix: {
+    [TimeFormat.Unix]: {
       main: '#429C00',
       start: '#0b5000',
       contrastText: '#ffffff'
@@ -144,12 +132,6 @@ const theme = createTheme({
     values: breakpointValues
   }
 });
-
-export enum TimeFormat {
-  Gnss,
-  Utc,
-  Unix
-}
 
 function App() {
   const [conversionResult, setConversionResult] = useState<TimeConversionResult>();

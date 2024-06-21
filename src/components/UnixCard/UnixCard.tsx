@@ -5,6 +5,7 @@ import { FieldState, initialFieldState } from '../../models/FieldState.ts';
 import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
 import { TimeConverter } from '@jk21/time-converter';
 import { UnixCardHeaderStyled } from './UnixCard.style.ts';
+import { TimeFormat } from '../../App.tsx';
 
 interface UnixCardProps {
   onSubmit: (result: TimeConversionResult) => void;
@@ -71,10 +72,10 @@ const UnixCard: FC<UnixCardProps> = ({ onSubmit }): ReactElement => {
           />
         </FormWrapperStyled>
         <ButtonWrapperStyled>
-          <Button variant="contained" onClick={handleSubmit} color="unix">
+          <Button variant="contained" onClick={handleSubmit} color={TimeFormat.Unix}>
             Submit
           </Button>
-          <Button variant="outlined" onClick={handleClear} color="unix">
+          <Button variant="outlined" onClick={handleClear} color={TimeFormat.Unix}>
             Clear
           </Button>
         </ButtonWrapperStyled>

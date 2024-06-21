@@ -1,5 +1,6 @@
-import { CardActions, styled } from '@mui/material';
+import { CardActions, CardActionsProps, styled } from '@mui/material';
 import Card from '@mui/material/Card';
+import { CustomColor } from '../../App.tsx';
 
 export const OverlayStyled = styled('div')(() => ({
   display: 'flex',
@@ -18,11 +19,20 @@ export const ResultCardStyled = styled(Card)({
   borderRadius: '15px'
 });
 
-export const CardActionsStyled = styled(CardActions)({
+interface CardActionStyledProps extends CardActionsProps {
+  headerColor?: CustomColor;
+}
+
+export const CardActionsStyled = styled(CardActions, {
+  shouldForwardProp: prop => prop !== 'timeFormat'
+})<CardActionStyledProps>(({ theme, headerColor }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  backgroundColor: 'red',
+  background:
+    headerColor !== undefined
+      ? `linear-gradient(to right bottom, ${headerColor.start}, ${headerColor.main})`
+      : theme.palette.primary.main,
   color: 'white',
   padding: 15
-});
+}));

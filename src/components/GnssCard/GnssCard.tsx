@@ -7,6 +7,7 @@ import { GnssTime } from '../../models/GnssTime.ts';
 import { TimeConverter } from '@jk21/time-converter';
 import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
 import { GnssCardHeaderStyled } from './GnssCard.style.ts';
+import { TimeFormat } from '../../App.tsx';
 
 enum GnssValidationError {
   Required = 'Value is required',
@@ -113,10 +114,10 @@ const GnssCard: FC<GnssCardProps> = ({ onSubmit }): ReactElement => {
           />
         </FormWrapperStyled>
         <ButtonWrapperStyled>
-          <Button onClick={handleSubmit} variant="contained" color="gnss">
+          <Button onClick={handleSubmit} variant="contained" color={TimeFormat.Gnss}>
             Submit
           </Button>
-          <Button onClick={handleClear} variant="text" color="gnss">
+          <Button onClick={handleClear} variant="text" color={TimeFormat.Gnss}>
             Clear
           </Button>
         </ButtonWrapperStyled>
