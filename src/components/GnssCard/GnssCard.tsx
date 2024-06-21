@@ -1,11 +1,12 @@
 import { FC, ReactElement, useState } from 'react';
 import { Button, TextField } from '@mui/material';
 import { isValidGnssTime, maxTimeOfWeek } from '../../utils/convertGnssToUnix.ts';
-import { ButtonWrapperStyled, CardStyled, FormWrapperStyled } from '../CardContainer.style.ts';
+import { ButtonWrapperStyled, CardContentStyled, CardStyled, FormWrapperStyled } from '../CardContainer.style.ts';
 import { FieldState, initialFieldState } from '../../models/FieldState.ts';
 import { GnssTime } from '../../models/GnssTime.ts';
 import { TimeConverter } from '@jk21/time-converter';
 import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
+import { GnssCardHeaderStyled } from './GnssCard.style.ts';
 
 enum GnssValidationError {
   Required = 'Value is required',
@@ -83,39 +84,43 @@ const GnssCard: FC<GnssCardProps> = ({ onSubmit }): ReactElement => {
 
   return (
     <CardStyled>
-      <h1>GNSS Time</h1>
-      <FormWrapperStyled>
-        <TextField
-          type="number"
-          label="Week"
-          variant="outlined"
-          required
-          value={week.value}
-          error={week.error}
-          helperText={week.error && week.message}
-          onChange={event => setWeek(prevState => ({ ...prevState, value: event.target.value, error: false }))}
-          onBlur={event => isValidWeek(event.target.value)}
-        />
-        <TextField
-          type="number"
-          label="Time of week"
-          variant="outlined"
-          required
-          value={timeOfWeek.value}
-          error={timeOfWeek.error}
-          helperText={timeOfWeek.error && timeOfWeek.message}
-          onChange={event => setTimeOfWeek(prevState => ({ ...prevState, value: event.target.value, error: false }))}
-          onBlur={event => isValidTimeOfWeek(event.target.value)}
-        />
-      </FormWrapperStyled>
-      <ButtonWrapperStyled>
-        <Button onClick={handleSubmit} variant="contained">
-          Submit
-        </Button>
-        <Button onClick={handleClear} variant="outlined">
-          Clear
-        </Button>
-      </ButtonWrapperStyled>
+      <GnssCardHeaderStyled>
+        <h1>GNSS Time</h1>
+      </GnssCardHeaderStyled>
+      <CardContentStyled>
+        <FormWrapperStyled>
+          <TextField
+            type="number"
+            label="Week"
+            variant="outlined"
+            required
+            value={week.value}
+            error={week.error}
+            helperText={week.error && week.message}
+            onChange={event => setWeek(prevState => ({ ...prevState, value: event.target.value, error: false }))}
+            onBlur={event => isValidWeek(event.target.value)}
+          />
+          <TextField
+            type="number"
+            label="Time of week"
+            variant="outlined"
+            required
+            value={timeOfWeek.value}
+            error={timeOfWeek.error}
+            helperText={timeOfWeek.error && timeOfWeek.message}
+            onChange={event => setTimeOfWeek(prevState => ({ ...prevState, value: event.target.value, error: false }))}
+            onBlur={event => isValidTimeOfWeek(event.target.value)}
+          />
+        </FormWrapperStyled>
+        <ButtonWrapperStyled>
+          <Button onClick={handleSubmit} variant="contained" color="gnss">
+            Submit
+          </Button>
+          <Button onClick={handleClear} variant="text" color="gnss">
+            Clear
+          </Button>
+        </ButtonWrapperStyled>
+      </CardContentStyled>
     </CardStyled>
   );
 };

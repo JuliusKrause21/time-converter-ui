@@ -1,9 +1,10 @@
 import { FC, ReactElement, useState } from 'react';
-import { ButtonWrapperStyled, CardStyled, FormWrapperStyled } from '../CardContainer.style.ts';
+import { ButtonWrapperStyled, CardContentStyled, CardStyled, FormWrapperStyled } from '../CardContainer.style.ts';
 import { Button, TextField } from '@mui/material';
 import { FieldState, initialFieldState } from '../../models/FieldState.ts';
 import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
 import { TimeConverter } from '@jk21/time-converter';
+import { UnixCardHeaderStyled } from './UnixCard.style.ts';
 
 interface UnixCardProps {
   onSubmit: (result: TimeConversionResult) => void;
@@ -52,28 +53,32 @@ const UnixCard: FC<UnixCardProps> = ({ onSubmit }): ReactElement => {
 
   return (
     <CardStyled>
-      <h1>Unix</h1>
-      <FormWrapperStyled>
-        <TextField
-          type="number"
-          label="Unix time stamp"
-          variant="outlined"
-          required
-          value={unixTime.value ?? ''}
-          error={unixTime.error}
-          helperText={unixTime.error && unixTime.message}
-          onChange={event => setUnixTime(prevState => ({ ...prevState, value: event.target.value, error: false }))}
-          onBlur={event => isValidUnixTime(event.target.value)}
-        />
-      </FormWrapperStyled>
-      <ButtonWrapperStyled>
-        <Button variant="contained" onClick={handleSubmit}>
-          Submit
-        </Button>
-        <Button variant="outlined" onClick={handleClear}>
-          Clear
-        </Button>
-      </ButtonWrapperStyled>
+      <UnixCardHeaderStyled>
+        <h1>Unix</h1>
+      </UnixCardHeaderStyled>
+      <CardContentStyled>
+        <FormWrapperStyled>
+          <TextField
+            type="number"
+            label="Unix time stamp"
+            variant="outlined"
+            required
+            value={unixTime.value ?? ''}
+            error={unixTime.error}
+            helperText={unixTime.error && unixTime.message}
+            onChange={event => setUnixTime(prevState => ({ ...prevState, value: event.target.value, error: false }))}
+            onBlur={event => isValidUnixTime(event.target.value)}
+          />
+        </FormWrapperStyled>
+        <ButtonWrapperStyled>
+          <Button variant="contained" onClick={handleSubmit} color="unix">
+            Submit
+          </Button>
+          <Button variant="outlined" onClick={handleClear} color="unix">
+            Clear
+          </Button>
+        </ButtonWrapperStyled>
+      </CardContentStyled>
     </CardStyled>
   );
 };

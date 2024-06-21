@@ -1,5 +1,4 @@
 import { createTheme, styled, ThemeProvider } from '@mui/material';
-import background from './assets/watch_background.jpg';
 import { ReactNode, useState } from 'react';
 import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
 import Overlay from './components/Overlay/Overlay.tsx';
@@ -7,10 +6,63 @@ import CardsContent from './components/CardsContent/CardsContent.tsx';
 
 export const breakpointValues = { xs: 360, sm: 600, md: 900, lg: 1200, xl: 1920 };
 
+declare module '@mui/material/styles' {
+  interface Palette {
+    gnss: {
+      main: string;
+      start: string;
+      contrastText: string;
+    };
+    utc: {
+      main: string;
+      start: string;
+      contrastText: string;
+    };
+    unix: {
+      main: string;
+      start: string;
+      contrastText: string;
+    };
+  }
+  interface PaletteOptions {
+    gnss: {
+      main: string;
+      start: string;
+      contrastText: string;
+    };
+    utc: {
+      main: string;
+      start: string;
+      contrastText: string;
+    };
+    unix: {
+      main: string;
+      start: string;
+      contrastText: string;
+    };
+  }
+}
+
+declare module '@mui/material/Button' {
+  interface ButtonPropsColorOverrides {
+    gnss: true;
+    utc: true;
+    unix: true;
+  }
+}
+
+declare module '@mui/material/Fab' {
+  export interface FabPropsColorOverrides {
+    gnss: true;
+    utc: true;
+    unix: true;
+  }
+}
+
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#ffffff',
+      main: '#a3a1a1',
       contrastText: '#000000'
     },
     secondary: {
@@ -18,42 +70,59 @@ const theme = createTheme({
       light: '#F5EBFF',
       contrastText: '#000'
     },
-    error: {
-      main: '#FF4B4BFF'
+    gnss: {
+      main: '#9C009B',
+      start: '#47019C',
+      contrastText: '#ffffff'
+    },
+    utc: {
+      main: '#008A9C',
+      start: '#08329c',
+      contrastText: '#ffffff'
+    },
+    unix: {
+      main: '#429C00',
+      start: '#0b5000',
+      contrastText: '#ffffff'
     }
+
+    // error: {
+    //   main: '#FF4B4BFF'
+    // }
   },
+
   components: {
-    MuiInputLabel: {
-      styleOverrides: {
-        root: {
-          color: 'white',
-          '&.Mui-focused': {
-            color: 'white' // Change 'blue' to your desired focus color
-          }
-        }
-      }
-    },
-    MuiTextField: {
-      styleOverrides: {
-        root: {
-          '& .MuiInputBase-input': {
-            color: 'white' // Change to your desired text color
-          },
-          '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-              border: ' 1px solid white',
-              color: 'white'
-            },
-            '&:hover fieldset': {
-              border: ' 1px solid white'
-            },
-            '&.Mui-focused fieldset': {
-              border: ' 1px solid white'
-            }
-          }
-        }
-      }
-    },
+    // MuiInputLabel: {
+    //   styleOverrides: {
+    //     root: {
+    //       color: 'white',
+    //       '&.Mui-focused': {
+    //         color: 'white' // Change 'blue' to your desired focus color
+    //       }
+    //     }
+    //   }
+    // },
+    // MuiTextField: {
+    //   styleOverrides: {
+    //     root: {
+    //       '& .MuiInputBase-input': {
+    //         color: 'white' // Change to your desired text color
+    //       },
+    //       '& .MuiOutlinedInput-root': {
+    //         '& fieldset': {
+    //           border: ' 1px solid white',
+    //           color: 'white'
+    //         },
+    //         '&:hover fieldset': {
+    //           border: ' 1px solid white'
+    //         },
+    //         '&.Mui-focused fieldset': {
+    //           border: ' 1px solid white'
+    //         }
+    //       }
+    //     }
+    //   }
+    // },
     MuiTableRow: {
       styleOverrides: {
         root: {
@@ -119,13 +188,10 @@ const PageContainer = styled('div')(() => ({
   padding: 0,
   display: 'inline-flex',
   justifyContent: 'center',
-  alignItems: 'center',
+  alignItems: 'flex-start',
   minHeight: '100vh',
-  minWidth: '100vw',
-  backgroundImage: `url(${background})`,
-  backgroundRepeat: 'no-repeat',
-  backgroundPosition: 'center',
-  color: 'white'
+  minWidth: '100vw'
+  // color: 'white'
 }));
 
 export default App;

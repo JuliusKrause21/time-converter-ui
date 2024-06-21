@@ -1,9 +1,10 @@
-import { CardContent, Collapse, Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
+import { CardContent, Collapse, Table, TableBody, TableContainer, TableRow } from '@mui/material';
 import { FC, ReactNode } from 'react';
 
 import { GnssTime, isGnssTime } from '../../../models/GnssTime.ts';
 import { DateTime, isDateTime } from '../../../models/DateTime.ts';
 import { AdditionalInfo, isAdditionalInfo } from '../../../models/AdditionalInfo.ts';
+import { TableCellStyled } from './CollapseContent.style.ts';
 
 interface CollapseContentProps {
   expand: boolean;
@@ -29,24 +30,24 @@ const CollapseContent: FC<CollapseContentProps> = ({ expand, content }) => {
     if (isGnssTime(content)) {
       return Object.keys(gnssTableRows).map(key => (
         <TableRow key={key}>
-          <TableCell>{gnssTableRows[key as keyof GnssTime]}</TableCell>
-          <TableCell>{content[key as keyof GnssTime]}</TableCell>
+          <TableCellStyled>{gnssTableRows[key as keyof GnssTime]}</TableCellStyled>
+          <TableCellStyled>{content[key as keyof GnssTime]}</TableCellStyled>
         </TableRow>
       ));
     }
     if (isDateTime(content)) {
       return Object.keys(dateTimeTableRows).map(key => (
         <TableRow key={key}>
-          <TableCell>{dateTimeTableRows[key as keyof DateTime]}</TableCell>
-          <TableCell>{content[key as keyof DateTime]}</TableCell>
+          <TableCellStyled>{dateTimeTableRows[key as keyof DateTime]}</TableCellStyled>
+          <TableCellStyled>{content[key as keyof DateTime]}</TableCellStyled>
         </TableRow>
       ));
     }
     if (isAdditionalInfo(content)) {
       return Object.keys(additionalInfoRows).map(key => (
         <TableRow key={key}>
-          <TableCell>{additionalInfoRows[key as keyof AdditionalInfo]}</TableCell>
-          <TableCell>{`${content[key as keyof AdditionalInfo]}`}</TableCell>
+          <TableCellStyled>{additionalInfoRows[key as keyof AdditionalInfo]}</TableCellStyled>
+          <TableCellStyled>{`${content[key as keyof AdditionalInfo]}`}</TableCellStyled>
         </TableRow>
       ));
     }

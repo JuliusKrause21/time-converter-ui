@@ -2,13 +2,14 @@ import CardsAnimation from '../CardsAnimation/CardsAnimation.tsx';
 import GnssCard from '../GnssCard/GnssCard.tsx';
 import UnixCard from '../UnixCard/UnixCard.tsx';
 import { TimeFormat } from '../../App.tsx';
-import { IconButton } from '@mui/material';
+import { Fab } from '@mui/material';
 import { KeyboardArrowDownOutlined } from '@mui/icons-material';
 import { useAnimationControls } from 'framer-motion';
 import { FC, useState } from 'react';
 import { CardContainerStyled } from '../CardContainer.style.ts';
 import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
 import UtcCard from '../UtcCard/UtcCard.tsx';
+import { FabPropsColorOverrides } from '@mui/material/Fab';
 
 interface CardsContentProps {
   onTimeConversion: (result: TimeConversionResult, format: TimeFormat) => void;
@@ -17,6 +18,12 @@ interface CardsContentProps {
 const CardsContent: FC<CardsContentProps> = ({ onTimeConversion }) => {
   const [activeTimeFormat, setActiveTimeFormat] = useState<TimeFormat>(TimeFormat.Gnss);
   const controls = useAnimationControls();
+
+  const buttonColorMap: Record<TimeFormat, keyof FabPropsColorOverrides> = {
+    [TimeFormat.Gnss]: 'gnss',
+    [TimeFormat.Utc]: 'utc',
+    [TimeFormat.Unix]: 'unix'
+  };
 
   const handleCardShiftDown = async (): Promise<void> => {
     switch (activeTimeFormat) {
@@ -64,9 +71,9 @@ const CardsContent: FC<CardsContentProps> = ({ onTimeConversion }) => {
           <UnixCard onSubmit={result => onTimeConversion(result, TimeFormat.Unix)} />
         )}
       </CardsAnimation>
-      <IconButton size="large" onClick={handleCardShiftDown}>
-        <KeyboardArrowDownOutlined color="primary" />
-      </IconButton>
+      <Fab size="large" onClick={handleCardShiftDown} color={buttonColorMap[activeTimeFormat]}>
+        <KeyboardArrowDownOutlined />
+      </Fab>
     </CardContainerStyled>
   );
 };
