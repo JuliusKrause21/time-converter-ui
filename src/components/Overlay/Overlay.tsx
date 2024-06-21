@@ -1,11 +1,11 @@
 import { CardContainerStyled } from '../CardContainer.style.ts';
 import { OverlayStyled } from './Overlay.style.ts';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
 import ConversionResult, { ConversionResultTitle } from './ConversionResult/ConversionResult.tsx';
 import { buildDateString, buildTimeString } from '../../utils/buildUtcStings.ts';
 import { TimeFormat } from '../../App.tsx';
-import ConversionResultHeader from './Header/ConversionResultHeader.tsx';
+import ConversionResultHeader from './ConversionResultHeader/ConversionResultHeader.tsx';
 import { useTheme } from '@mui/material';
 
 const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -32,6 +32,11 @@ interface OverlayProps {
 
 const Overlay: FC<OverlayProps> = ({ conversionResult, convertedFormat, onClose }) => {
   const theme = useTheme();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <OverlayStyled>
       <CardContainerStyled>
