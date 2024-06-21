@@ -88,10 +88,24 @@ const GnssCard: FC<GnssCardProps> = ({ onNext, onSubmit }): ReactElement => {
   return (
     <CardStyled>
       <GnssCardHeaderStyled>
-        <h1 style={{ marginTop: 0 }}>GNSS Time</h1>
-        <Fab size="large" onClick={onNext} color={TimeFormat.Gnss}>
-          <KeyboardArrowRightOutlined />
-        </Fab>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            width: '100%',
+            marginTop: '15px'
+          }}
+        >
+          <h1 style={{ marginTop: 0 }}>GNSS Time</h1>
+          <Fab size="large" onClick={onNext} color={TimeFormat.Gnss}>
+            <KeyboardArrowRightOutlined />
+          </Fab>
+        </div>
+        <div style={{ marginBottom: '20px' }}>
+          The GNSS time is represented in weeks and seconds of the week since the launch of the initial operable GPS
+          constellation on 06.01.1980 at midnight.
+        </div>
       </GnssCardHeaderStyled>
       <CardContentStyled>
         <FormWrapperStyled>

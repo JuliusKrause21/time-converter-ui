@@ -21,13 +21,13 @@ export const CardStyled = styled(Card)({
   padding: 0,
   width: '100%',
   borderRadius: '15px',
-  height: '500px',
+  height: '600px',
   color: 'white'
 });
 
 export const CardHeaderStyled = styled('div')({
   display: 'flex',
-  alignItems: 'self-start',
+  flexDirection: 'column',
   justifyContent: 'space-between',
   height: '100%',
   padding: '15px'
