@@ -119,7 +119,7 @@ function App() {
             onClose={() => setShowOverlay(false)}
           />
         )}
-        <CardsContent onTimeConversion={handleTimeConversionResult} />
+        <CardsContent showOverlay={showOverlay} onTimeConversion={handleTimeConversionResult} />
       </PageContainer>
     </ThemeProvider>
   );

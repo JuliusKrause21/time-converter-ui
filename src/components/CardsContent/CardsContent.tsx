@@ -11,10 +11,11 @@ import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
 import UtcCard from '../UtcCard/UtcCard.tsx';
 
 interface CardsContentProps {
+  showOverlay: boolean;
   onTimeConversion: (result: TimeConversionResult, format: TimeFormat) => void;
 }
 
-const CardsContent: FC<CardsContentProps> = ({ onTimeConversion }) => {
+const CardsContent: FC<CardsContentProps> = ({ showOverlay, onTimeConversion }) => {
   const [activeTimeFormat, setActiveTimeFormat] = useState<TimeFormat>(TimeFormat.Gnss);
   const controls = useAnimationControls();
 
@@ -52,7 +53,7 @@ const CardsContent: FC<CardsContentProps> = ({ onTimeConversion }) => {
   };
 
   return (
-    <CardContainerStyled>
+    <CardContainerStyled style={{ opacity: showOverlay ? '0.33' : 1 }}>
       <CardsAnimation controls={controls}>
         {activeTimeFormat === TimeFormat.Gnss && (
           <GnssCard onSubmit={result => onTimeConversion(result, TimeFormat.Gnss)} />

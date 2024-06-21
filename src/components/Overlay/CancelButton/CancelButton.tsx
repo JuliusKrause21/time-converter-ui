@@ -8,7 +8,7 @@ export interface CancelButtonProps {
 const CancelButton: FC<CancelButtonProps> = ({ onClose }) => {
   return (
     <CancelButtonStyled onClick={onClose}>
-      <svg viewBox="0 0 100 100" width="50px" height="50px" stroke="black" strokeWidth="10" strokeLinecap="round">
+      <svg viewBox="0 0 100 100" width="50px" height="50px" stroke="white" strokeWidth="10" strokeLinecap="round">
         <line x1="20" x2="80" y1="20" y2="80" />
         <line x1="20" x2="80" y1="80" y2="20" />
       </svg>

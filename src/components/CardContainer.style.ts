@@ -21,7 +21,7 @@ export const CardStyled = styled(Card)({
   padding: 0,
   width: '100%',
   borderRadius: '15px',
-  height: '600px',
+  height: '500px',
   color: 'white'
 });
 
