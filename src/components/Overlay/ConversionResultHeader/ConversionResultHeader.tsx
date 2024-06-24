@@ -9,7 +9,6 @@ interface ConversionResultHeaderProps {
 const ConversionResultHeader: FC<ConversionResultHeaderProps> = ({ onClose }) => {
   return (
     <ConversionResultHeaderStyled>
-      <h2>Time Conversion:</h2>
       <CancelButton onClose={onClose} />
     </ConversionResultHeaderStyled>
   );

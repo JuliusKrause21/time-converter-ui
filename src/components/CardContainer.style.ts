@@ -1,4 +1,4 @@
-import { Box, CardActions, styled } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import Card from '@mui/material/Card';
 
 export const CardContainerStyled = styled('div')({
@@ -10,39 +10,49 @@ export const CardContainerStyled = styled('div')({
   maxWidth: '750px',
   minWidth: '250px',
   margin: '0 25px',
-  rowGap: '20px'
+  rowGap: '20px',
+  marginTop: '40px',
+  zIndex: 1
 });
 
 export const CardStyled = styled(Card)({
   display: 'flex',
   flexDirection: 'column',
-  padding: 15,
+  padding: 0,
   width: '100%',
-  borderRadius: '8px',
-  border: '1px solid white',
-  background: 'transparent',
+  borderRadius: '15px',
+  height: '600px',
   color: 'white'
 });
 
-export const CardActionsStyled = styled(CardActions)({
+export const CardHeaderStyled = styled('div')({
   display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between'
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+  height: '100%',
+  padding: '15px'
+});
+
+export const CardContentStyled = styled('div')({
+  display: 'flex',
+  flexDirection: 'column',
+  rowGap: '20px',
+  justifyContent: 'flex-end',
+  marginTop: '20px',
+  padding: '15px'
 });
 
 export const FormWrapperStyled = styled(Box)({
   display: 'flex',
   flexDirection: 'column',
   rowGap: 25,
-  height: '100%',
-  justifyContent: 'flex-start'
+  justifyContent: 'flex-end'
 });
 
 export const ButtonWrapperStyled = styled(Box)({
   display: 'flex',
   flexDirection: 'column',
   rowGap: 10,
-  marginTop: 35,
-  height: '100%',
-  justifyContent: 'flex-end'
+  justifyContent: 'flex-end',
+  marginTop: '20px'
 });
