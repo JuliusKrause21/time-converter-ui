@@ -1,5 +1,4 @@
 import { ButtonWrapperStyled, CardContentStyled, CardStyled, FormWrapperStyled } from '../CardContainer.style.ts';
-import { Button, Fab } from '@mui/material';
 import { TimeConverter } from '@jk21/time-converter';
 import { LocalizationProvider, MobileDatePicker, MobileTimePicker } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from 'dayjs';
@@ -10,7 +9,10 @@ import { FC, useState } from 'react';
 import { FieldState, initialFieldState } from '../../models/FieldState.ts';
 import { UtcCardHeaderStyled } from './UtcCard.style.ts';
 import { TimeFormat } from '../../App.tsx';
-import { KeyboardArrowRightOutlined } from '@mui/icons-material';
+import CardTitle from '../CardTitle/CardTitle.tsx';
+import CardDescription from '../CardDescritpion/CardDescription.tsx';
+import ClearButton from '../ClearButton/ClearButton.tsx';
+import ConvertButton from '../ConvertButton/ConvertButton.tsx';
 
 interface UtcCardProps {
   onNext: () => void;
@@ -48,10 +50,11 @@ const UtcCard: FC<UtcCardProps> = ({ onNext, onSubmit }) => {
   return (
     <CardStyled>
       <UtcCardHeaderStyled>
-        <h1 style={{ marginTop: 0 }}>Utc</h1>
-        <Fab size="large" onClick={onNext} color={TimeFormat.Utc}>
-          <KeyboardArrowRightOutlined />
-        </Fab>
+        <CardTitle title="Utc" timeFormat={TimeFormat.Utc} onClick={onNext} />
+        <CardDescription>
+          The Coordinated Universal Time (UTC) is the primary time standard globally used to regulate clocks and time.
+          It establishes a reference for the current time, forming the basis for civil time and time zones
+        </CardDescription>
       </UtcCardHeaderStyled>
       <CardContentStyled>
         <FormWrapperStyled>
@@ -94,12 +97,8 @@ const UtcCard: FC<UtcCardProps> = ({ onNext, onSubmit }) => {
           </LocalizationProvider>
         </FormWrapperStyled>
         <ButtonWrapperStyled>
-          <Button variant="contained" onClick={handleSubmit} color={TimeFormat.Utc}>
-            Convert
-          </Button>
-          <Button variant="outlined" onClick={handleClear} color={TimeFormat.Utc}>
-            Clear
-          </Button>
+          <ConvertButton timeFormat={TimeFormat.Utc} onClick={handleSubmit} />
+          <ClearButton timeFormat={TimeFormat.Utc} onClick={handleClear} />
         </ButtonWrapperStyled>
       </CardContentStyled>
     </CardStyled>

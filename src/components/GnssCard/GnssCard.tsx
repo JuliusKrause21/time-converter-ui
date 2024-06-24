@@ -1,5 +1,5 @@
 import { FC, ReactElement, useState } from 'react';
-import { Button, Fab, TextField } from '@mui/material';
+import { TextField } from '@mui/material';
 import { isValidGnssTime, maxTimeOfWeek } from '../../utils/convertGnssToUnix.ts';
 import { ButtonWrapperStyled, CardContentStyled, CardStyled, FormWrapperStyled } from '../CardContainer.style.ts';
 import { FieldState, initialFieldState } from '../../models/FieldState.ts';
@@ -8,7 +8,10 @@ import { TimeConverter } from '@jk21/time-converter';
 import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
 import { GnssCardHeaderStyled } from './GnssCard.style.ts';
 import { TimeFormat } from '../../App.tsx';
-import { KeyboardArrowRightOutlined } from '@mui/icons-material';
+import CardTitle from '../CardTitle/CardTitle.tsx';
+import CardDescription from '../CardDescritpion/CardDescription.tsx';
+import ClearButton from '../ClearButton/ClearButton.tsx';
+import ConvertButton from '../ConvertButton/ConvertButton.tsx';
 
 enum GnssValidationError {
   Required = 'Value is required',
@@ -88,24 +91,11 @@ const GnssCard: FC<GnssCardProps> = ({ onNext, onSubmit }): ReactElement => {
   return (
     <CardStyled>
       <GnssCardHeaderStyled>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            width: '100%',
-            marginTop: '15px'
-          }}
-        >
-          <h1 style={{ marginTop: 0 }}>GNSS Time</h1>
-          <Fab size="large" onClick={onNext} color={TimeFormat.Gnss}>
-            <KeyboardArrowRightOutlined />
-          </Fab>
-        </div>
-        <div style={{ marginBottom: '20px' }}>
+        <CardTitle title="GNSS Time" timeFormat={TimeFormat.Gnss} onClick={onNext} />
+        <CardDescription>
           The GNSS time is represented in weeks and seconds of the week since the launch of the initial operable GPS
           constellation on 06.01.1980 at midnight.
-        </div>
+        </CardDescription>
       </GnssCardHeaderStyled>
       <CardContentStyled>
         <FormWrapperStyled>
@@ -133,12 +123,8 @@ const GnssCard: FC<GnssCardProps> = ({ onNext, onSubmit }): ReactElement => {
           />
         </FormWrapperStyled>
         <ButtonWrapperStyled>
-          <Button onClick={handleSubmit} variant="contained" color={TimeFormat.Gnss}>
-            Convert
-          </Button>
-          <Button onClick={handleClear} variant="text" color={TimeFormat.Gnss}>
-            Clear
-          </Button>
+          <ConvertButton timeFormat={TimeFormat.Gnss} onClick={handleSubmit} />
+          <ClearButton timeFormat={TimeFormat.Gnss} onClick={handleClear} />
         </ButtonWrapperStyled>
       </CardContentStyled>
     </CardStyled>

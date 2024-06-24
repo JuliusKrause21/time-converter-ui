@@ -1,12 +1,15 @@
 import { FC, ReactElement, useState } from 'react';
 import { ButtonWrapperStyled, CardContentStyled, CardStyled, FormWrapperStyled } from '../CardContainer.style.ts';
-import { Button, Fab, TextField } from '@mui/material';
+import { TextField } from '@mui/material';
 import { FieldState, initialFieldState } from '../../models/FieldState.ts';
 import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
 import { TimeConverter } from '@jk21/time-converter';
 import { UnixCardHeaderStyled } from './UnixCard.style.ts';
 import { TimeFormat } from '../../App.tsx';
-import { KeyboardArrowRightOutlined } from '@mui/icons-material';
+import CardTitle from '../CardTitle/CardTitle.tsx';
+import CardDescription from '../CardDescritpion/CardDescription.tsx';
+import ClearButton from '../ClearButton/ClearButton.tsx';
+import ConvertButton from '../ConvertButton/ConvertButton.tsx';
 
 interface UnixCardProps {
   onNext: () => void;
@@ -57,10 +60,11 @@ const UnixCard: FC<UnixCardProps> = ({ onNext, onSubmit }): ReactElement => {
   return (
     <CardStyled>
       <UnixCardHeaderStyled>
-        <h1 style={{ marginTop: 0 }}>Unix</h1>
-        <Fab size="large" onClick={onNext} color={TimeFormat.Unix}>
-          <KeyboardArrowRightOutlined />
-        </Fab>
+        <CardTitle title="Unix" timeFormat={TimeFormat.Unix} onClick={onNext} />
+        <CardDescription>
+          The Unix time is represented by the number of non-leap seconds that have elapsed since 00:00:00 UTC on 1
+          January 1970, the Unix epoch. The Unix time of the GNSS initial epoch is therefore 315964800.
+        </CardDescription>
       </UnixCardHeaderStyled>
       <CardContentStyled>
         <FormWrapperStyled>
@@ -77,12 +81,8 @@ const UnixCard: FC<UnixCardProps> = ({ onNext, onSubmit }): ReactElement => {
           />
         </FormWrapperStyled>
         <ButtonWrapperStyled>
-          <Button variant="contained" onClick={handleSubmit} color={TimeFormat.Unix}>
-            Convert
-          </Button>
-          <Button variant="outlined" onClick={handleClear} color={TimeFormat.Unix}>
-            Clear
-          </Button>
+          <ConvertButton timeFormat={TimeFormat.Unix} onClick={handleSubmit} />
+          <ClearButton timeFormat={TimeFormat.Unix} onClick={handleClear} />
         </ButtonWrapperStyled>
       </CardContentStyled>
     </CardStyled>
