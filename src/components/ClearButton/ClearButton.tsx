@@ -3,13 +3,14 @@ import { Button } from '@mui/material';
 import { FC } from 'react';
 
 interface ClearButtonProps {
+  text?: string;
   timeFormat: TimeFormat;
   onClick: () => void;
 }
-const ClearButton: FC<ClearButtonProps> = ({ timeFormat, onClick }) => {
+const ClearButton: FC<ClearButtonProps> = ({ text = 'Clear', timeFormat, onClick }) => {
   return (
     <Button onClick={onClick} variant="text" color={timeFormat}>
-      Clear
+      {text}
     </Button>
   );
 };
