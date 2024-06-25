@@ -103,7 +103,7 @@ const UtcCard: FC<UtcCardProps> = ({ onNext, onSubmit }) => {
         </FormWrapperStyled>
         <ButtonWrapperStyled>
           <ConvertButton timeFormat={TimeFormat.Utc} onClick={handleSubmit} />
-          <ClearButton timeFormat={TimeFormat.Utc} onClick={handleClear} />
+          <ClearButton text="Reset" timeFormat={TimeFormat.Utc} onClick={handleClear} />
         </ButtonWrapperStyled>
       </CardContentStyled>
     </CardStyled>
