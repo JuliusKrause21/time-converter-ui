@@ -1,9 +1,11 @@
 import { CardContent, Collapse, Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
 import { FC, ReactNode } from 'react';
+import CheckIcon from '@mui/icons-material/Check';
 
 import { GnssTime, isGnssTime } from '../../../models/GnssTime.ts';
 import { DateTime, isDateTime } from '../../../models/DateTime.ts';
 import { AdditionalInfo, isAdditionalInfo } from '../../../models/AdditionalInfo.ts';
+import { ClearIcon } from '@mui/x-date-pickers';
 
 interface CollapseContentProps {
   expand: boolean;
@@ -25,7 +27,29 @@ const additionalInfoRows: Record<keyof AdditionalInfo, string> = {
 };
 
 const CollapseContent: FC<CollapseContentProps> = ({ expand, content }) => {
+  function mapAdditionalInfoContent(key: keyof AdditionalInfo): string | ReactNode {
+    if (!isAdditionalInfo(content)) {
+      return '';
+    }
+    const field = content[key];
+    if (field === undefined) {
+      return '';
+    }
+
+    if (typeof field === 'boolean') {
+      return field ? <CheckIcon /> : <ClearIcon />;
+    }
+    return `${field}`;
+  }
+
   function renderTableRows(): ReactNode {
+    if (content === undefined) {
+      return (
+        <TableRow>
+          <TableCell>Time was before initial epoch of the system</TableCell>
+        </TableRow>
+      );
+    }
     if (isGnssTime(content)) {
       return Object.keys(gnssTableRows).map(key => (
         <TableRow key={key}>
@@ -46,7 +70,7 @@ const CollapseContent: FC<CollapseContentProps> = ({ expand, content }) => {
       return Object.keys(additionalInfoRows).map(key => (
         <TableRow key={key}>
           <TableCell>{additionalInfoRows[key as keyof AdditionalInfo]}</TableCell>
-          <TableCell>{`${content[key as keyof AdditionalInfo]}`}</TableCell>
+          <TableCell>{mapAdditionalInfoContent(key as keyof AdditionalInfo)}</TableCell>
         </TableRow>
       ));
     }
