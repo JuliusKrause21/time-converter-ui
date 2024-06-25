@@ -1,5 +1,5 @@
-import { createTheme, styled, ThemeProvider } from '@mui/material';
-import { useState } from 'react';
+import { createTheme, styled, ThemeProvider, useMediaQuery } from '@mui/material';
+import { useMemo, useState } from 'react';
 import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
 import Overlay from './components/Overlay/Overlay.tsx';
 import CardsContent from './components/CardsContent/CardsContent.tsx';
@@ -47,58 +47,75 @@ declare module '@mui/material/Fab' {
   }
 }
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#a3a1a1',
-      contrastText: '#000000'
-    },
-    secondary: {
-      main: '#ffffff',
-      light: '#F5EBFF',
-      contrastText: '#000'
-    },
-    [TimeFormat.Gnss]: {
-      main: '#9C009B',
-      start: '#47019C',
-      contrastText: '#ffffff'
-    },
-    [TimeFormat.Utc]: {
-      main: '#008A9C',
-      start: '#08329c',
-      contrastText: '#ffffff'
-    },
-    [TimeFormat.Unix]: {
-      main: '#429C00',
-      start: '#0b5000',
-      contrastText: '#ffffff'
-    }
-  },
-
-  components: {
-    MuiTableRow: {
-      styleOverrides: {
-        root: {
-          '&:last-child td': {
-            borderBottom: '0'
-          }
-        }
-      }
-    },
-    MuiTableCell: {
-      styleOverrides: {
-        root: {
-          color: 'black'
-        }
-      }
-    }
-  },
-  breakpoints: {
-    values: breakpointValues
-  }
-});
-
 function App() {
+  const preferenceDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+
+  const theme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode: preferenceDarkMode ? 'dark' : 'light',
+          primary: {
+            main: '#a3a1a1',
+            contrastText: '#000000'
+          },
+          secondary: {
+            main: '#ffffff',
+            light: '#F5EBFF',
+            contrastText: '#000'
+          },
+          [TimeFormat.Gnss]: {
+            main: '#9C009B',
+            start: '#47019C',
+            contrastText: '#ffffff'
+          },
+          [TimeFormat.Utc]: {
+            main: '#008A9C',
+            start: '#08329c',
+            contrastText: '#ffffff'
+          },
+          [TimeFormat.Unix]: {
+            main: '#429C00',
+            start: '#0b5000',
+            contrastText: '#ffffff'
+          }
+        },
+
+        components: {
+          MuiFab: {
+            styleOverrides: {
+              root: {
+                '&:hover': {
+                  backgroundColor: 'transparent',
+                  opacity: '0.75'
+                }
+              }
+            }
+          },
+          MuiTableRow: {
+            styleOverrides: {
+              root: {
+                '&:last-child td': {
+                  borderBottom: '0'
+                }
+              }
+            }
+          },
+          MuiTableCell: {
+            styleOverrides: {
+              root: {
+                color: preferenceDarkMode ? 'white' : 'black'
+              }
+            }
+          }
+        },
+        breakpoints: {
+          values: breakpointValues
+        }
+      }),
+    [preferenceDarkMode]
+  );
+
   const [conversionResult, setConversionResult] = useState<TimeConversionResult>();
   const [showOverlay, setShowOverlay] = useState(false);
   const [convertedFormat, setConvertedFormat] = useState<TimeFormat | undefined>();
