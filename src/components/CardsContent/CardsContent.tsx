@@ -14,7 +14,7 @@ interface CardsContentProps {
 }
 
 const CardsContent: FC<CardsContentProps> = ({ showOverlay, onTimeConversion }) => {
-  const [activeTimeFormat, setActiveTimeFormat] = useState<TimeFormat>(TimeFormat.Gnss);
+  const [activeTimeFormat, setActiveTimeFormat] = useState<TimeFormat>(TimeFormat.Utc);
   const controls = useAnimationControls();
 
   const handleCardShiftDown = async (): Promise<void> => {
