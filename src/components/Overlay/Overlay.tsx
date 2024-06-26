@@ -4,9 +4,9 @@ import { FC, useEffect } from 'react';
 import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
 import ConversionResult, { ConversionResultTitle } from './ConversionResult/ConversionResult.tsx';
 import { buildDateString, buildTimeString } from '../../utils/buildUtcStings.ts';
-import { TimeFormat } from '../../App.tsx';
 import ConversionResultHeader from './ConversionResultHeader/ConversionResultHeader.tsx';
 import { useTheme } from '@mui/material';
+import { TimeFormat } from '../../models/TimeFormat.ts';
 
 const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const months = [

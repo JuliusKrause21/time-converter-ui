@@ -1,12 +1,12 @@
 import CardsAnimation from '../CardsAnimation/CardsAnimation.tsx';
 import GnssCard from '../GnssCard/GnssCard.tsx';
 import UnixCard from '../UnixCard/UnixCard.tsx';
-import { TimeFormat } from '../../App.tsx';
 import { useAnimationControls } from 'framer-motion';
 import { FC, useState } from 'react';
 import { CardContainerStyled } from '../CardContainer.style.ts';
 import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
 import UtcCard from '../UtcCard/UtcCard.tsx';
+import { TimeFormat } from '../../models/TimeFormat.ts';
 
 interface CardsContentProps {
   showOverlay: boolean;
