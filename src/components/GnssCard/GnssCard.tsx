@@ -7,11 +7,11 @@ import { GnssTime } from '../../models/GnssTime.ts';
 import { TimeConverter } from '@jk21/time-converter';
 import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
 import { GnssCardHeaderStyled } from './GnssCard.style.ts';
-import { TimeFormat } from '../../App.tsx';
 import CardTitle from '../CardTitle/CardTitle.tsx';
 import CardDescription from '../CardDescritpion/CardDescription.tsx';
 import ClearButton from '../ClearButton/ClearButton.tsx';
 import ConvertButton from '../ConvertButton/ConvertButton.tsx';
+import { TimeFormat } from '../../models/TimeFormat.ts';
 
 enum GnssValidationError {
   Required = 'Value is required',

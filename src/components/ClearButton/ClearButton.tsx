@@ -1,6 +1,6 @@
-import { TimeFormat } from '../../App.tsx';
 import { Button } from '@mui/material';
 import { FC } from 'react';
+import { TimeFormat } from '../../models/TimeFormat.ts';
 
 interface ClearButtonProps {
   text?: string;

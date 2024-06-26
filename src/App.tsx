@@ -1,51 +1,11 @@
-import { createTheme, styled, ThemeProvider, useMediaQuery } from '@mui/material';
+import { createTheme, ThemeProvider, useMediaQuery } from '@mui/material';
 import { useMemo, useState } from 'react';
 import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
 import Overlay from './components/Overlay/Overlay.tsx';
 import CardsContent from './components/CardsContent/CardsContent.tsx';
-
-export enum TimeFormat {
-  Gnss = 'gnss',
-  Utc = 'utc',
-  Unix = 'unix'
-}
-
-export const breakpointValues = { xs: 360, sm: 600, md: 900, lg: 1200, xl: 1920 };
-
-export interface CustomColor {
-  main: string;
-  start: string;
-  contrastText: string;
-}
-
-declare module '@mui/material/styles' {
-  interface Palette {
-    [TimeFormat.Gnss]: CustomColor;
-    [TimeFormat.Utc]: CustomColor;
-    [TimeFormat.Unix]: CustomColor;
-  }
-  interface PaletteOptions {
-    [TimeFormat.Gnss]: CustomColor;
-    [TimeFormat.Utc]: CustomColor;
-    [TimeFormat.Unix]: CustomColor;
-  }
-}
-
-declare module '@mui/material/Button' {
-  interface ButtonPropsColorOverrides {
-    [TimeFormat.Gnss]: true;
-    [TimeFormat.Utc]: true;
-    [TimeFormat.Unix]: true;
-  }
-}
-
-declare module '@mui/material/Fab' {
-  export interface FabPropsColorOverrides {
-    [TimeFormat.Gnss]: true;
-    [TimeFormat.Utc]: true;
-    [TimeFormat.Unix]: true;
-  }
-}
+import { TimeFormat } from './models/TimeFormat.ts';
+import { breakpointValues } from './theme.ts';
+import { PageContainerStyled } from './App.style.ts';
 
 function App() {
   const preferenceDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -128,7 +88,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <PageContainer>
+      <PageContainerStyled>
         {showOverlay && conversionResult !== undefined && (
           <Overlay
             conversionResult={conversionResult}
@@ -137,20 +97,9 @@ function App() {
           />
         )}
         <CardsContent showOverlay={showOverlay} onTimeConversion={handleTimeConversionResult} />
-      </PageContainer>
+      </PageContainerStyled>
     </ThemeProvider>
   );
 }
-
-const PageContainer = styled('div')(() => ({
-  margin: 0,
-  padding: 0,
-  display: 'inline-flex',
-  justifyContent: 'center',
-  alignItems: 'flex-start',
-  minHeight: '100vh',
-  minWidth: '100vw'
-  // color: 'white'
-}));
 
 export default App;

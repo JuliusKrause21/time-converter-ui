@@ -1,8 +1,8 @@
 import { CardHeading, CardTitleStyled } from './CardTitle.style.ts';
 import { Fab } from '@mui/material';
-import { TimeFormat } from '../../App.tsx';
 import { KeyboardArrowRightOutlined } from '@mui/icons-material';
 import { FC } from 'react';
+import { TimeFormat } from '../../models/TimeFormat.ts';
 
 interface CardTitleProps {
   title: string;

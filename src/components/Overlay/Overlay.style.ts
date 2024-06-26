@@ -1,6 +1,7 @@
 import { CardActions, CardActionsProps, styled } from '@mui/material';
 import Card from '@mui/material/Card';
-import { CustomColor } from '../../App.tsx';
+
+import { CustomColor } from '../../theme.ts';
 
 export const OverlayStyled = styled('div')(() => ({
   display: 'flex',

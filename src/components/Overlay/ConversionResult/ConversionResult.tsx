@@ -6,7 +6,8 @@ import { GnssTime } from '../../../models/GnssTime.ts';
 import { DateTime } from '../../../models/DateTime.ts';
 import { AdditionalInfo } from '../../../models/AdditionalInfo.ts';
 import { CardActionsStyled, ResultCardStyled } from '../Overlay.style.ts';
-import { CustomColor } from '../../../App.tsx';
+
+import { CustomColor } from '../../../theme.ts';
 
 export enum ConversionResultTitle {
   Gnss = 'Gnss Time',

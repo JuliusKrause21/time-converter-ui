@@ -8,12 +8,12 @@ import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
 import { FC, useState } from 'react';
 import { FieldState, initialFieldState } from '../../models/FieldState.ts';
 import { UtcCardHeaderStyled } from './UtcCard.style.ts';
-import { TimeFormat } from '../../App.tsx';
 import CardTitle from '../CardTitle/CardTitle.tsx';
 import CardDescription from '../CardDescritpion/CardDescription.tsx';
 import ClearButton from '../ClearButton/ClearButton.tsx';
 import ConvertButton from '../ConvertButton/ConvertButton.tsx';
 import { useTheme } from '@mui/material';
+import { TimeFormat } from '../../models/TimeFormat.ts';
 
 interface UtcCardProps {
   onNext: () => void;
