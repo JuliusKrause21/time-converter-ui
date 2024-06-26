@@ -53,11 +53,11 @@ const CardsContent: FC<CardsContentProps> = ({ showOverlay, onTimeConversion }) 
   return (
     <CardContainerStyled style={{ opacity: showOverlay ? '0.33' : 1 }}>
       <CardsAnimation controls={controls}>
-        {activeTimeFormat === TimeFormat.Gnss && (
-          <GnssCard onNext={handleCardShiftDown} onSubmit={result => onTimeConversion(result, TimeFormat.Gnss)} />
-        )}
         {activeTimeFormat === TimeFormat.Utc && (
           <UtcCard onNext={handleCardShiftDown} onSubmit={result => onTimeConversion(result, TimeFormat.Utc)} />
+        )}
+        {activeTimeFormat === TimeFormat.Gnss && (
+          <GnssCard onNext={handleCardShiftDown} onSubmit={result => onTimeConversion(result, TimeFormat.Gnss)} />
         )}
         {activeTimeFormat === TimeFormat.Unix && (
           <UnixCard onNext={handleCardShiftDown} onSubmit={result => onTimeConversion(result, TimeFormat.Unix)} />
