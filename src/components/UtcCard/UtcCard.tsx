@@ -5,11 +5,9 @@ import dayjs, { Dayjs } from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import utc from 'dayjs/plugin/utc';
 import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
-import { FC, useState } from 'react';
+import { FC, useContext, useState } from 'react';
 import { FieldState, initialFieldState } from '../../models/FieldState.ts';
-import { UtcCardHeaderStyled } from './UtcCard.style.ts';
-import CardTitle from '../CardTitle/CardTitle.tsx';
-import CardDescription from '../CardDescritpion/CardDescription.tsx';
+import CardHeader from '../CardHeader/CardHeader.tsx';
 import ClearButton from '../ClearButton/ClearButton.tsx';
 import ConvertButton from '../ConvertButton/ConvertButton.tsx';
 import { useTheme } from '@mui/material';
@@ -24,8 +22,6 @@ interface UtcCardProps {
 dayjs.extend(utc);
 
 const UtcCard: FC<UtcCardProps> = ({ onNext, onSubmit }) => {
-  const theme = useTheme();
-
   const currentDate = new Date();
 
   const [date, setDate] = useState<FieldState<Dayjs>>(initialFieldState<Dayjs>(dayjs.utc(currentDate)));
@@ -53,15 +49,12 @@ const UtcCard: FC<UtcCardProps> = ({ onNext, onSubmit }) => {
     setDate(prevState => ({ ...prevState, value, error: false }));
   };
 
+  const description =
+    'The Coordinated Universal Time (UTC) is the primary time standard globally used to regulate clocks and time. It establishes a reference for the current time, forming the basis for civil time and time zones';
+
   return (
     <CardStyled>
-      <UtcCardHeaderStyled>
-        <CardTitle title="Utc" timeFormat={TimeFormat.Utc} onClick={onNext} />
-        <CardDescription>
-          The Coordinated Universal Time (UTC) is the primary time standard globally used to regulate clocks and time.
-          It establishes a reference for the current time, forming the basis for civil time and time zones
-        </CardDescription>
-      </UtcCardHeaderStyled>
+      <CardHeader title="Utc" description={description} timeFormat={TimeFormat.Utc} onClick={onNext} />
       <CardContentStyled>
         <FormWrapperStyled>
           <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={'de'}>

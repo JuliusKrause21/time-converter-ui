@@ -25,14 +25,6 @@ export const CardStyled = styled(Card)({
   color: 'white'
 });
 
-export const CardHeaderStyled = styled('div')({
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'space-between',
-  height: '100%',
-  padding: '15px'
-});
-
 export const CardContentStyled = styled('div')({
   display: 'flex',
   flexDirection: 'column',
