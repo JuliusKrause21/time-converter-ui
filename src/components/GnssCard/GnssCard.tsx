@@ -1,10 +1,9 @@
 import { FC, ReactElement, useContext, useState } from 'react';
 import { TextField } from '@mui/material';
-import { isValidGnssTime, maxTimeOfWeek } from '../../utils/convertGnssToUnix.ts';
 import { ButtonWrapperStyled, CardContentStyled, CardStyled, FormWrapperStyled } from '../CardContainer.style.ts';
 import { FieldState, initialFieldState } from '../../models/FieldState.ts';
-import { GnssTime } from '../../models/GnssTime.ts';
-import { TimeConverter } from '@jk21/time-converter';
+import { GnssTime, isGnssTime } from '../../models/GnssTime.ts';
+import { maxTimeOfWeek, TimeConverter } from '@jk21/time-converter';
 import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
 import CardHeader from '../CardHeader/CardHeader.tsx';
 import ClearButton from '../ClearButton/ClearButton.tsx';
@@ -36,14 +35,13 @@ const GnssCard: FC<GnssCardProps> = ({ onNext, onSubmit }): ReactElement => {
     onSubmit(result);
     return;
   };
-
   const handleSubmit = () => {
     if (!isValidForm(week.value, timeOfWeek.value)) {
       return;
     }
 
     const gnssTime: GnssTime = { week: +week.value, timeOfWeek: +timeOfWeek.value };
-    if (!isValidGnssTime(gnssTime)) {
+    if (!isGnssTime(gnssTime)) {
       console.log('Validation failed');
       return;
     }
