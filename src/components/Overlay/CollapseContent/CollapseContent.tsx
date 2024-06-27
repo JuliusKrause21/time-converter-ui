@@ -12,6 +12,8 @@ interface CollapseContentProps {
   content: GnssTime | DateTime | AdditionalInfo | undefined;
 }
 
+type AdditionalRowContent = { title: string; mapContent: (content: AdditionalInfo) => string | ReactNode };
+
 const gnssTableRows: Record<keyof GnssTime, string> = { week: 'Week', timeOfWeek: 'Time of week' };
 const dateTimeTableRows: Record<keyof DateTime, string> = {
   date: 'Date',
@@ -19,29 +21,22 @@ const dateTimeTableRows: Record<keyof DateTime, string> = {
   month: 'Month',
   weekday: 'Day of week'
 };
-const additionalInfoRows: Record<keyof AdditionalInfo, string> = {
-  unix: 'Unix Time',
-  leapSeconds: 'Leap Seconds',
-  isLeapYear: 'Leap year',
-  nextLeapYear: 'Next Leap year'
+
+const additionalInfoRows: Record<keyof AdditionalInfo, AdditionalRowContent> = {
+  unix: {
+    title: 'Unix Time',
+    mapContent: content =>
+      content.unix !== undefined ? `${content.unix}` : 'Time was before initial epoch of the system'
+  },
+  leapSeconds: {
+    title: 'Leap Seconds',
+    mapContent: content => (content.leapSeconds !== undefined ? `${content.leapSeconds}` : 'Not used')
+  },
+  isLeapYear: { title: 'Leap year', mapContent: content => (content.isLeapYear ? <CheckIcon /> : <ClearIcon />) },
+  nextLeapYear: { title: 'Next Leap year', mapContent: content => `${content.nextLeapYear}` }
 };
 
 const CollapseContent: FC<CollapseContentProps> = ({ expand, content }) => {
-  function mapAdditionalInfoContent(key: keyof AdditionalInfo): string | ReactNode {
-    if (!isAdditionalInfo(content)) {
-      return '';
-    }
-    const field = content[key];
-    if (field === undefined) {
-      return '';
-    }
-
-    if (typeof field === 'boolean') {
-      return field ? <CheckIcon /> : <ClearIcon />;
-    }
-    return `${field}`;
-  }
-
   function renderTableRows(): ReactNode {
     if (content === undefined) {
       return (
@@ -69,8 +64,8 @@ const CollapseContent: FC<CollapseContentProps> = ({ expand, content }) => {
     if (isAdditionalInfo(content)) {
       return Object.keys(additionalInfoRows).map(key => (
         <TableRow key={key}>
-          <TableCell>{additionalInfoRows[key as keyof AdditionalInfo]}</TableCell>
-          <TableCell>{mapAdditionalInfoContent(key as keyof AdditionalInfo)}</TableCell>
+          <TableCell>{additionalInfoRows[key as keyof AdditionalInfo].title}</TableCell>
+          <TableCell>{additionalInfoRows[key as keyof AdditionalInfo].mapContent(content)}</TableCell>
         </TableRow>
       ));
     }

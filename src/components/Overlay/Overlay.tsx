@@ -63,8 +63,8 @@ const Overlay: FC<OverlayProps> = ({ conversionResult, convertedFormat, onClose 
           headerColor={theme.palette[TimeFormat.Unix]}
           open={convertedFormat !== TimeFormat.Unix}
           content={{
-            unix: conversionResult.unixTime ?? 0,
-            leapSeconds: conversionResult.leapSeconds ?? 0,
+            unix: conversionResult.unixTime,
+            leapSeconds: conversionResult.leapSeconds,
             isLeapYear: conversionResult.leapYear,
             nextLeapYear: conversionResult.nextLeapYear
           }}
