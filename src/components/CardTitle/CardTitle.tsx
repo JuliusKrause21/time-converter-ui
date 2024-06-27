@@ -4,7 +4,7 @@ import { KeyboardArrowRightOutlined } from '@mui/icons-material';
 import { FC } from 'react';
 import { TimeFormat } from '../../models/TimeFormat.ts';
 
-interface CardTitleProps {
+export interface CardTitleProps {
   title: string;
   timeFormat: TimeFormat;
   onClick: () => void;

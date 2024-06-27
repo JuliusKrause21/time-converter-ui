@@ -1,8 +1,8 @@
 export interface AdditionalInfo {
-  unix: number;
-  leapSeconds: number;
-  isLeapYear: boolean | undefined;
-  nextLeapYear: number | undefined;
+  unix: number | undefined;
+  leapSeconds: number | undefined;
+  isLeapYear: boolean;
+  nextLeapYear: number;
 }
 
 export function isAdditionalInfo(value: unknown): value is AdditionalInfo {
@@ -10,5 +10,5 @@ export function isAdditionalInfo(value: unknown): value is AdditionalInfo {
     return false;
   }
   const potentialAdditionalInfo = value as AdditionalInfo;
-  return potentialAdditionalInfo.unix !== undefined && potentialAdditionalInfo.leapSeconds !== undefined;
+  return potentialAdditionalInfo.isLeapYear !== undefined && potentialAdditionalInfo.nextLeapYear !== undefined;
 }

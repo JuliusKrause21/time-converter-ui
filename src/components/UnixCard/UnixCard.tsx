@@ -1,15 +1,14 @@
-import { FC, ReactElement, useState } from 'react';
+import { FC, ReactElement, useContext, useState } from 'react';
 import { ButtonWrapperStyled, CardContentStyled, CardStyled, FormWrapperStyled } from '../CardContainer.style.ts';
 import { TextField } from '@mui/material';
 import { FieldState, initialFieldState } from '../../models/FieldState.ts';
 import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
 import { TimeConverter } from '@jk21/time-converter';
-import { UnixCardHeaderStyled } from './UnixCard.style.ts';
-import CardTitle from '../CardTitle/CardTitle.tsx';
-import CardDescription from '../CardDescritpion/CardDescription.tsx';
+import CardHeader from '../CardHeader/CardHeader.tsx';
 import ClearButton from '../ClearButton/ClearButton.tsx';
 import ConvertButton from '../ConvertButton/ConvertButton.tsx';
 import { TimeFormat } from '../../models/TimeFormat.ts';
+import { LeapSecondsContext } from '../../store/LeapSecondsContext.ts';
 
 interface UnixCardProps {
   onNext: () => void;
@@ -23,8 +22,9 @@ enum UnixValidationError {
 
 const UnixCard: FC<UnixCardProps> = ({ onNext, onSubmit }): ReactElement => {
   const [unixTime, setUnixTime] = useState<FieldState<string>>(initialFieldState<string>(''));
+  const { leapSecondsUsed } = useContext(LeapSecondsContext);
 
-  const timeConverter = new TimeConverter();
+  const timeConverter = new TimeConverter(leapSecondsUsed);
 
   const convertUnixTime = (unixTime: number): void => {
     const result = timeConverter.convertUnixTime(unixTime);
@@ -57,15 +57,12 @@ const UnixCard: FC<UnixCardProps> = ({ onNext, onSubmit }): ReactElement => {
     return true;
   }
 
+  const description =
+    'The Unix time is represented by the number of non-leap seconds that have elapsed since 00:00:00 UTC on January 1st 1970, the Unix epoch. The Unix time of the GNSS initial epoch is therefore 315964800.';
+
   return (
     <CardStyled>
-      <UnixCardHeaderStyled>
-        <CardTitle title="Unix" timeFormat={TimeFormat.Unix} onClick={onNext} />
-        <CardDescription>
-          The Unix time is represented by the number of non-leap seconds that have elapsed since 00:00:00 UTC on 1
-          January 1970, the Unix epoch. The Unix time of the GNSS initial epoch is therefore 315964800.
-        </CardDescription>
-      </UnixCardHeaderStyled>
+      <CardHeader title="Unix" description={description} timeFormat={TimeFormat.Unix} onClick={onNext} />
       <CardContentStyled>
         <FormWrapperStyled>
           <TextField

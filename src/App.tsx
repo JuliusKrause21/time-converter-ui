@@ -6,6 +6,7 @@ import CardsContent from './components/CardsContent/CardsContent.tsx';
 import { TimeFormat } from './models/TimeFormat.ts';
 import { breakpointValues } from './theme.ts';
 import { PageContainerStyled } from './App.style.ts';
+import { LeapSecondsContext } from './store/LeapSecondsContext.ts';
 
 function App() {
   const preferenceDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -79,6 +80,7 @@ function App() {
   const [conversionResult, setConversionResult] = useState<TimeConversionResult>();
   const [showOverlay, setShowOverlay] = useState(false);
   const [convertedFormat, setConvertedFormat] = useState<TimeFormat | undefined>();
+  const [leapSecondsUsed, setLeapSecondsUsed] = useState(true);
 
   const handleTimeConversionResult = (result: TimeConversionResult, format: TimeFormat): void => {
     setConversionResult(result);
@@ -88,16 +90,18 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <PageContainerStyled>
-        {showOverlay && conversionResult !== undefined && (
-          <Overlay
-            conversionResult={conversionResult}
-            convertedFormat={convertedFormat}
-            onClose={() => setShowOverlay(false)}
-          />
-        )}
-        <CardsContent showOverlay={showOverlay} onTimeConversion={handleTimeConversionResult} />
-      </PageContainerStyled>
+      <LeapSecondsContext.Provider value={{ leapSecondsUsed, setLeapSecondsUsed }}>
+        <PageContainerStyled>
+          {showOverlay && conversionResult !== undefined && (
+            <Overlay
+              conversionResult={conversionResult}
+              convertedFormat={convertedFormat}
+              onClose={() => setShowOverlay(false)}
+            />
+          )}
+          <CardsContent showOverlay={showOverlay} onTimeConversion={handleTimeConversionResult} />
+        </PageContainerStyled>
+      </LeapSecondsContext.Provider>
     </ThemeProvider>
   );
 }

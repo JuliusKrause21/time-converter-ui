@@ -1,4 +1,4 @@
-import { FC, ReactElement, useState } from 'react';
+import { FC, ReactElement, useContext, useState } from 'react';
 import { TextField } from '@mui/material';
 import { isValidGnssTime, maxTimeOfWeek } from '../../utils/convertGnssToUnix.ts';
 import { ButtonWrapperStyled, CardContentStyled, CardStyled, FormWrapperStyled } from '../CardContainer.style.ts';
@@ -6,12 +6,11 @@ import { FieldState, initialFieldState } from '../../models/FieldState.ts';
 import { GnssTime } from '../../models/GnssTime.ts';
 import { TimeConverter } from '@jk21/time-converter';
 import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
-import { GnssCardHeaderStyled } from './GnssCard.style.ts';
-import CardTitle from '../CardTitle/CardTitle.tsx';
-import CardDescription from '../CardDescritpion/CardDescription.tsx';
+import CardHeader from '../CardHeader/CardHeader.tsx';
 import ClearButton from '../ClearButton/ClearButton.tsx';
 import ConvertButton from '../ConvertButton/ConvertButton.tsx';
 import { TimeFormat } from '../../models/TimeFormat.ts';
+import { LeapSecondsContext } from '../../store/LeapSecondsContext.ts';
 
 enum GnssValidationError {
   Required = 'Value is required',
@@ -28,7 +27,9 @@ const GnssCard: FC<GnssCardProps> = ({ onNext, onSubmit }): ReactElement => {
   const [week, setWeek] = useState<FieldState<string>>(initialFieldState<string>(''));
   const [timeOfWeek, setTimeOfWeek] = useState<FieldState<string>>(initialFieldState<string>(''));
 
-  const timeConverter = new TimeConverter();
+  const { leapSecondsUsed } = useContext(LeapSecondsContext);
+
+  const timeConverter = new TimeConverter(leapSecondsUsed);
 
   const convertGnssTime = (gnssTime: GnssTime): void => {
     const result = timeConverter.convertGnssTime(gnssTime);
@@ -88,15 +89,12 @@ const GnssCard: FC<GnssCardProps> = ({ onNext, onSubmit }): ReactElement => {
     return validWeek && validTimeOfWeek;
   }
 
+  const description =
+    'The GNSS time is represented in weeks and seconds of the week since the launch of the initial operable GPS constellation on 06.01.1980 at midnight.';
+
   return (
     <CardStyled>
-      <GnssCardHeaderStyled>
-        <CardTitle title="GNSS Time" timeFormat={TimeFormat.Gnss} onClick={onNext} />
-        <CardDescription>
-          The GNSS time is represented in weeks and seconds of the week since the launch of the initial operable GPS
-          constellation on 06.01.1980 at midnight.
-        </CardDescription>
-      </GnssCardHeaderStyled>
+      <CardHeader title="GNSS Time" description={description} timeFormat={TimeFormat.Gnss} onClick={onNext} />
       <CardContentStyled>
         <FormWrapperStyled>
           <TextField
