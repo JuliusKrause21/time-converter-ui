@@ -12,6 +12,7 @@ import CardDescription from '../CardDescritpion/CardDescription.tsx';
 import ClearButton from '../ClearButton/ClearButton.tsx';
 import ConvertButton from '../ConvertButton/ConvertButton.tsx';
 import { TimeFormat } from '../../models/TimeFormat.ts';
+import { LeapSecondsContext } from '../../store/LeapSecondsContext.ts';
 
 enum GnssValidationError {
   Required = 'Value is required',
@@ -28,7 +29,9 @@ const GnssCard: FC<GnssCardProps> = ({ onNext, onSubmit }): ReactElement => {
   const [week, setWeek] = useState<FieldState<string>>(initialFieldState<string>(''));
   const [timeOfWeek, setTimeOfWeek] = useState<FieldState<string>>(initialFieldState<string>(''));
 
-  const timeConverter = new TimeConverter();
+  const { leapSecondsUsed } = useContext(LeapSecondsContext);
+
+  const timeConverter = new TimeConverter(leapSecondsUsed);
 
   const convertGnssTime = (gnssTime: GnssTime): void => {
     const result = timeConverter.convertGnssTime(gnssTime);

@@ -10,6 +10,7 @@ import CardDescription from '../CardDescritpion/CardDescription.tsx';
 import ClearButton from '../ClearButton/ClearButton.tsx';
 import ConvertButton from '../ConvertButton/ConvertButton.tsx';
 import { TimeFormat } from '../../models/TimeFormat.ts';
+import { LeapSecondsContext } from '../../store/LeapSecondsContext.ts';
 
 interface UnixCardProps {
   onNext: () => void;
@@ -23,8 +24,9 @@ enum UnixValidationError {
 
 const UnixCard: FC<UnixCardProps> = ({ onNext, onSubmit }): ReactElement => {
   const [unixTime, setUnixTime] = useState<FieldState<string>>(initialFieldState<string>(''));
+  const { leapSecondsUsed } = useContext(LeapSecondsContext);
 
-  const timeConverter = new TimeConverter();
+  const timeConverter = new TimeConverter(leapSecondsUsed);
 
   const convertUnixTime = (unixTime: number): void => {
     const result = timeConverter.convertUnixTime(unixTime);

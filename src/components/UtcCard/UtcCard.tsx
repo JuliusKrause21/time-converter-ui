@@ -14,6 +14,7 @@ import ClearButton from '../ClearButton/ClearButton.tsx';
 import ConvertButton from '../ConvertButton/ConvertButton.tsx';
 import { useTheme } from '@mui/material';
 import { TimeFormat } from '../../models/TimeFormat.ts';
+import { LeapSecondsContext } from '../../store/LeapSecondsContext.ts';
 
 interface UtcCardProps {
   onNext: () => void;
@@ -28,8 +29,10 @@ const UtcCard: FC<UtcCardProps> = ({ onNext, onSubmit }) => {
   const currentDate = new Date();
 
   const [date, setDate] = useState<FieldState<Dayjs>>(initialFieldState<Dayjs>(dayjs.utc(currentDate)));
+  const { leapSecondsUsed } = useContext(LeapSecondsContext);
+  const theme = useTheme();
 
-  const timeConverter = new TimeConverter();
+  const timeConverter = new TimeConverter(leapSecondsUsed);
 
   const handleSubmit = () => {
     const utc = date.value.toDate();
