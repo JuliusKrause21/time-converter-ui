@@ -2,18 +2,10 @@ export interface DateTime {
   date: string;
   time: string;
   month: string;
-  weekday: string;
+  dayOfWeek: string;
+  dayOfYear: string;
 }
 
-export function isDateTime(value: unknown): value is DateTime {
-  if (value === undefined || typeof value !== 'object') {
-    return false;
-  }
-  const potentialDateTime = value as DateTime;
-  return (
-    potentialDateTime.date !== undefined &&
-    potentialDateTime.time !== undefined &&
-    potentialDateTime.month !== undefined &&
-    potentialDateTime.weekday !== undefined
-  );
+export function isDate(value: unknown): value is Date {
+  return Object.prototype.toString.call(value) === '[object Date]';
 }

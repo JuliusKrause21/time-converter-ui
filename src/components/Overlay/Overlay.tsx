@@ -3,26 +3,9 @@ import { OverlayStyled } from './Overlay.style.ts';
 import { FC, useEffect } from 'react';
 import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
 import ConversionResult, { ConversionResultTitle } from './ConversionResult/ConversionResult.tsx';
-import { buildDateString, buildTimeString } from '../../utils/buildUtcStings.ts';
 import ConversionResultHeader from './ConversionResultHeader/ConversionResultHeader.tsx';
 import { useTheme } from '@mui/material';
 import { TimeFormat } from '../../models/TimeFormat.ts';
-
-const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-const months = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'Mai',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December'
-];
 
 interface OverlayProps {
   convertedFormat: TimeFormat | undefined;
@@ -51,12 +34,7 @@ const Overlay: FC<OverlayProps> = ({ conversionResult, convertedFormat, onClose 
           title={ConversionResultTitle.Utc}
           headerColor={theme.palette[TimeFormat.Utc]}
           open={convertedFormat !== TimeFormat.Utc}
-          content={{
-            date: buildDateString(conversionResult.utc),
-            time: buildTimeString(conversionResult.utc),
-            month: conversionResult && months[conversionResult?.utc.getMonth()],
-            weekday: conversionResult && weekdays[conversionResult?.utc.getDay()]
-          }}
+          content={conversionResult.utc}
         />
         <ConversionResult
           title={ConversionResultTitle.Additional}

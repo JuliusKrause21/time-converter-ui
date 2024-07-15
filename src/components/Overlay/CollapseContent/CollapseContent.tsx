@@ -3,23 +3,45 @@ import { FC, ReactNode } from 'react';
 import CheckIcon from '@mui/icons-material/Check';
 
 import { GnssTime, isGnssTime } from '../../../models/GnssTime.ts';
-import { DateTime, isDateTime } from '../../../models/DateTime.ts';
+import { DateTime, isDate } from '../../../models/DateTime.ts';
 import { AdditionalInfo, isAdditionalInfo } from '../../../models/AdditionalInfo.ts';
 import { ClearIcon } from '@mui/x-date-pickers';
+import { buildDateString, buildDayOfYearString, buildTimeString } from '../../../utils/buildUtcStings.ts';
 
 interface CollapseContentProps {
   expand: boolean;
-  content: GnssTime | DateTime | AdditionalInfo | undefined;
+  content: GnssTime | Date | AdditionalInfo | undefined;
 }
 
+type DateTimeRowContent = { title: string; mapContent: (content: Date) => string };
 type AdditionalRowContent = { title: string; mapContent: (content: AdditionalInfo) => string | ReactNode };
 
+const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const months = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'Mai',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December'
+];
+
 const gnssTableRows: Record<keyof GnssTime, string> = { week: 'Week', timeOfWeek: 'Time of week' };
-const dateTimeTableRows: Record<keyof DateTime, string> = {
-  date: 'Date',
-  time: 'Time',
-  month: 'Month',
-  weekday: 'Day of week'
+const dateTimeTableRows: Record<keyof DateTime, DateTimeRowContent> = {
+  date: { title: 'Date', mapContent: content => buildDateString(content) },
+  time: { title: 'Time', mapContent: content => buildTimeString(content) },
+  month: { title: 'Month', mapContent: content => content && months[content?.getMonth()] },
+  dayOfWeek: { title: 'Day of week', mapContent: content => content && weekdays[content?.getDay()] },
+  dayOfYear: {
+    title: 'Day of year',
+    mapContent: content => buildDayOfYearString(content)
+  }
 };
 
 const additionalInfoRows: Record<keyof AdditionalInfo, AdditionalRowContent> = {
@@ -53,11 +75,11 @@ const CollapseContent: FC<CollapseContentProps> = ({ expand, content }) => {
         </TableRow>
       ));
     }
-    if (isDateTime(content)) {
+    if (isDate(content)) {
       return Object.keys(dateTimeTableRows).map(key => (
         <TableRow key={key}>
-          <TableCell>{dateTimeTableRows[key as keyof DateTime]}</TableCell>
-          <TableCell>{content[key as keyof DateTime]}</TableCell>
+          <TableCell>{dateTimeTableRows[key as keyof DateTime].title}</TableCell>
+          <TableCell>{dateTimeTableRows[key as keyof DateTime].mapContent(content)}</TableCell>
         </TableRow>
       ));
     }

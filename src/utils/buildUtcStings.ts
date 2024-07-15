@@ -15,3 +15,14 @@ export function buildTimeString(utc: Date | undefined): string {
         utc.getUTCSeconds()
       )}`;
 }
+
+export function buildDayOfYearString(utc: Date | undefined): string {
+  return utc === undefined
+    ? ''
+    : (
+        (Date.UTC(utc.getUTCFullYear(), utc.getUTCMonth(), utc.getDate()) - Date.UTC(utc.getUTCFullYear(), 0, 0)) /
+        24 /
+        3600 /
+        1000
+      ).toString();
+}

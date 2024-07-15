@@ -3,7 +3,6 @@ import ExpandButton from '../ExpandButton/ExpandButton.tsx';
 import CollapseContent from '../CollapseContent/CollapseContent.tsx';
 import { FC, useState } from 'react';
 import { GnssTime } from '../../../models/GnssTime.ts';
-import { DateTime } from '../../../models/DateTime.ts';
 import { AdditionalInfo } from '../../../models/AdditionalInfo.ts';
 import { CardActionsStyled, ResultCardStyled } from '../Overlay.style.ts';
 
@@ -19,7 +18,7 @@ interface ConversionResultProps {
   title: ConversionResultTitle;
   open: boolean;
   headerColor: CustomColor;
-  content: GnssTime | DateTime | AdditionalInfo | undefined;
+  content: GnssTime | Date | AdditionalInfo | undefined;
 }
 
 const ConversionResult: FC<ConversionResultProps> = ({ title, open, headerColor, content }) => {
