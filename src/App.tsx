@@ -26,18 +26,18 @@ function App() {
             contrastText: '#000'
           },
           [TimeFormat.Gnss]: {
-            main: '#9C009B',
-            start: '#47019C',
+            main: '#f76b15',
+            start: 'rgba(251,176,129,0.79)',
             contrastText: '#ffffff'
           },
           [TimeFormat.Utc]: {
-            main: '#008A9C',
-            start: '#08329c',
+            main: '#18438c',
+            start: '#638fff',
             contrastText: '#ffffff'
           },
           [TimeFormat.Unix]: {
-            main: '#429C00',
-            start: '#0b5000',
+            main: '#36363a',
+            start: '#5b5b5c',
             contrastText: '#ffffff'
           }
         },
