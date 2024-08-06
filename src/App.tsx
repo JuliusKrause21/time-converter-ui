@@ -27,17 +27,17 @@ function App() {
           },
           [TimeFormat.Gnss]: {
             main: '#f76b15',
-            start: 'rgba(251,176,129,0.79)',
+            start: 'rgba(247,107,21,0.5)',
             contrastText: '#ffffff'
           },
           [TimeFormat.Utc]: {
             main: '#18438c',
-            start: '#638fff',
+            start: 'rgba(24,67,140,0.5)',
             contrastText: '#ffffff'
           },
           [TimeFormat.Unix]: {
-            main: '#36363a',
-            start: '#5b5b5c',
+            main: '#616165',
+            start: 'rgba(97,97,101,0.5)',
             contrastText: '#ffffff'
           }
         },
