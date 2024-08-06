@@ -5,6 +5,7 @@ export const breakpointValues = { xs: 360, sm: 600, md: 900, lg: 1200, xl: 1920 
 export interface CustomColor {
   main: string;
   start: string;
+  end?: string;
   contrastText: string;
 }
 
