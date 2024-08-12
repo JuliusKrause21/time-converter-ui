@@ -12,8 +12,6 @@ on:
       - ci
     types:
       - completed
-    branches:
-      - main
 
 permissions:
   contents: read
