@@ -42,12 +42,6 @@ const Overlay: FC<OverlayProps> = ({ conversionResult, convertedFormat, onClose 
       <CardContainerStyled>
         <ConversionResultHeader onClose={onClose} />
         <ConversionResult
-          title={ConversionResultTitle.Gnss}
-          headerColor={theme.palette[TimeFormat.Gnss]}
-          open={convertedFormat !== TimeFormat.Gnss}
-          content={conversionResult?.gnssTime}
-        />
-        <ConversionResult
           title={ConversionResultTitle.Utc}
           headerColor={theme.palette[TimeFormat.Utc]}
           open={convertedFormat !== TimeFormat.Utc}
@@ -57,6 +51,12 @@ const Overlay: FC<OverlayProps> = ({ conversionResult, convertedFormat, onClose 
             month: conversionResult && months[conversionResult?.utc.getMonth()],
             weekday: conversionResult && weekdays[conversionResult?.utc.getDay()]
           }}
+        />
+        <ConversionResult
+          title={ConversionResultTitle.Gnss}
+          headerColor={theme.palette[TimeFormat.Gnss]}
+          open={convertedFormat !== TimeFormat.Gnss}
+          content={conversionResult?.gnssTime}
         />
         <ConversionResult
           title={ConversionResultTitle.Additional}

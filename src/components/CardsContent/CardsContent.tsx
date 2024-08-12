@@ -6,7 +6,7 @@ import { FC, useState } from 'react';
 import { CardContainerStyled } from '../CardContainer.style.ts';
 import { TimeConversionResult } from '@jk21/time-converter/dist/TimeConverter';
 import UtcCard from '../UtcCard/UtcCard.tsx';
-import { TimeFormat } from '../../models/TimeFormat.ts';
+import { TimeFormat, timeFormatOrder } from '../../models/TimeFormat.ts';
 
 interface CardsContentProps {
   showOverlay: boolean;
@@ -14,27 +14,14 @@ interface CardsContentProps {
 }
 
 const CardsContent: FC<CardsContentProps> = ({ showOverlay, onTimeConversion }) => {
-  const [activeTimeFormat, setActiveTimeFormat] = useState<TimeFormat>(TimeFormat.Utc);
+  const [activeTimeFormat, setActiveTimeFormat] = useState<TimeFormat>(timeFormatOrder[0].active);
   const controls = useAnimationControls();
 
   const handleCardShiftDown = async (): Promise<void> => {
-    switch (activeTimeFormat) {
-      case TimeFormat.Gnss:
-        await startRemoveAnimation();
-        setActiveTimeFormat(TimeFormat.Utc);
-        await startAppearAnimation();
-        break;
-      case TimeFormat.Utc:
-        await startRemoveAnimation();
-        setActiveTimeFormat(TimeFormat.Unix);
-        await startAppearAnimation();
-        break;
-      case TimeFormat.Unix:
-        await startRemoveAnimation();
-        setActiveTimeFormat(TimeFormat.Gnss);
-        await startAppearAnimation();
-        break;
-    }
+    const nextTimeFormat = timeFormatOrder.find(timeFormat => timeFormat.active === activeTimeFormat)?.next;
+    await startRemoveAnimation();
+    setActiveTimeFormat(nextTimeFormat ?? activeTimeFormat);
+    await startAppearAnimation();
     return;
   };
 
