@@ -25,12 +25,12 @@ function App() {
             light: '#F5EBFF',
             contrastText: '#000'
           },
-          [TimeFormat.Gnss]: {
+          [TimeFormat.Utc]: {
             main: '#f76b15',
             start: 'rgba(247,107,21,0.5)',
             contrastText: '#ffffff'
           },
-          [TimeFormat.Utc]: {
+          [TimeFormat.Gnss]: {
             main: '#18438c',
             start: 'rgba(24,67,140,0.5)',
             contrastText: '#ffffff'
